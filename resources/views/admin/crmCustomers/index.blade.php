@@ -1,0 +1,289 @@
+@extends('layouts.admin')
+@section('content')
+@can('crm_customer_create')
+    <div style="margin-bottom: 10px;" class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-success" href="{{ route('admin.crm-customers.create') }}">
+                {{ trans('global.add') }} {{ trans('cruds.crmCustomer.title_singular') }}
+            </a>
+            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+                {{ trans('global.app_csvImport') }}
+            </button>
+            @include('csvImport.modal', ['model' => 'CrmCustomer', 'route' => 'admin.crm-customers.parseCsvImport'])
+        </div>
+    </div>
+@endcan
+<div class="card">
+    <div class="card-header">
+        {{ trans('cruds.crmCustomer.title_singular') }} {{ trans('global.list') }}
+    </div>
+
+    <div class="card-body">
+        <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-CrmCustomer">
+            <thead>
+                <tr>
+                    <th width="10">
+
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.id') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.first_name') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.email') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.role') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.address') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.website') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.commission') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.nama_pic') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.no_telp_pic') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.nama_bank_pic') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.no_rekening_pic') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.nama_bank_companies') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.no_rekening_companies') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.dokumen_legalitas') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.status') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.assigned_to_user') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.prospects_source') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.contactContact.fields.contact_last_name') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.converted_date') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.crmCustomer.fields.created_by') }}
+                    </th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($roles as $key => $item)
+                                <option value="{{ $item->title }}">{{ $item->title }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($crm_statuses as $key => $item)
+                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($users as $key => $item)
+                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($contact_contacts as $key => $item)
+                                <option value="{{ $item->contact_first_name }}">{{ $item->contact_first_name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($users as $key => $item)
+                                <option value="{{ $item->name }}">{{ $item->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+@endsection
+@section('scripts')
+@parent
+<script>
+    $(function () {
+  let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+@can('crm_customer_delete')
+  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
+  let deleteButton = {
+    text: deleteButtonTrans,
+    url: "{{ route('admin.crm-customers.massDestroy') }}",
+    className: 'btn-danger',
+    action: function (e, dt, node, config) {
+      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
+          return entry.id
+      });
+
+      if (ids.length === 0) {
+        alert('{{ trans('global.datatables.zero_selected') }}')
+
+        return
+      }
+
+      if (confirm('{{ trans('global.areYouSure') }}')) {
+        $.ajax({
+          headers: {'x-csrf-token': _token},
+          method: 'POST',
+          url: config.url,
+          data: { ids: ids, _method: 'DELETE' }})
+          .done(function () { location.reload() })
+      }
+    }
+  }
+  dtButtons.push(deleteButton)
+@endcan
+
+  let dtOverrideGlobals = {
+    buttons: dtButtons,
+    processing: true,
+    serverSide: true,
+    retrieve: true,
+    aaSorting: [],
+    ajax: "{{ route('admin.crm-customers.index') }}",
+    columns: [
+      { data: 'placeholder', name: 'placeholder' },
+{ data: 'id', name: 'id' },
+{ data: 'first_name', name: 'first_name' },
+{ data: 'email', name: 'email' },
+{ data: 'role_title', name: 'role.title' },
+{ data: 'address', name: 'address' },
+{ data: 'website', name: 'website' },
+{ data: 'commission', name: 'commission' },
+{ data: 'nama_pic', name: 'nama_pic' },
+{ data: 'no_telp_pic', name: 'no_telp_pic' },
+{ data: 'nama_bank_pic', name: 'nama_bank_pic' },
+{ data: 'no_rekening_pic', name: 'no_rekening_pic' },
+{ data: 'nama_bank_companies', name: 'nama_bank_companies' },
+{ data: 'no_rekening_companies', name: 'no_rekening_companies' },
+{ data: 'dokumen_legalitas', name: 'dokumen_legalitas', sortable: false, searchable: false },
+{ data: 'status_name', name: 'status.name' },
+{ data: 'assigned_to_user_name', name: 'assigned_to_user.name' },
+{ data: 'prospects_source_contact_first_name', name: 'prospects_source.contact_first_name' },
+{ data: 'prospects_source.contact_last_name', name: 'prospects_source.contact_last_name' },
+{ data: 'converted_date', name: 'converted_date' },
+{ data: 'created_by_name', name: 'created_by.name' },
+{ data: 'actions', name: '{{ trans('global.actions') }}' }
+    ],
+    orderCellsTop: true,
+    order: [[ 1, 'desc' ]],
+    pageLength: 25,
+  };
+  let table = $('.datatable-CrmCustomer').DataTable(dtOverrideGlobals);
+  $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
+      $($.fn.dataTable.tables(true)).DataTable()
+          .columns.adjust();
+  });
+  
+let visibleColumnsIndexes = null;
+$('.datatable thead').on('input', '.search', function () {
+      let strict = $(this).attr('strict') || false
+      let value = strict && this.value ? "^" + this.value + "$" : this.value
+
+      let index = $(this).parent().index()
+      if (visibleColumnsIndexes !== null) {
+        index = visibleColumnsIndexes[index]
+      }
+
+      table
+        .column(index)
+        .search(value, strict)
+        .draw()
+  });
+table.on('column-visibility.dt', function(e, settings, column, state) {
+      visibleColumnsIndexes = []
+      table.columns(":visible").every(function(colIdx) {
+          visibleColumnsIndexes.push(colIdx);
+      });
+  })
+});
+
+</script>
+@endsection

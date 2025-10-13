@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Models\PolicyTravel;
+use Gate;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+
+class UpdatePolicyTravelRequest extends FormRequest
+{
+    public function authorize()
+    {
+        return Gate::allows('policy_travel_edit');
+    }
+
+    public function rules()
+    {
+        return [
+            'id_policies_id' => [
+                'required',
+                'integer',
+            ],
+            'polis_name' => [
+                'string',
+                'required',
+            ],
+            'policyholder_address' => [
+                'required',
+            ],
+            'jumlah_wisatawan' => [
+                'required',
+                'integer',
+                'min:-2147483648',
+                'max:2147483647',
+            ],
+            'asal_keberangkatan' => [
+                'string',
+                'nullable',
+            ],
+            'tujuan_keberangkatan' => [
+                'string',
+                'nullable',
+            ],
+            'nama_paket' => [
+                'string',
+                'nullable',
+            ],
+            'upload' => [
+                'array',
+            ],
+        ];
+    }
+}
