@@ -66,9 +66,6 @@ class PoliciesCentralController extends Controller
                 return $row->insurance_product ? $row->insurance_product->product_name : '';
             });
 
-            $table->editColumn('periode', function ($row) {
-                return $row->periode ? $row->periode : '';
-            });
             $table->editColumn('premium_amount', function ($row) {
                 return $row->premium_amount ? $row->premium_amount : '';
             });
@@ -111,9 +108,6 @@ class PoliciesCentralController extends Controller
                 return $row->assigned_to_user ? $row->assigned_to_user->name : '';
             });
 
-            $table->editColumn('data_source', function ($row) {
-                return $row->data_source ? PoliciesCentral::DATA_SOURCE_SELECT[$row->data_source] : '';
-            });
             $table->addColumn('external_policy_system_name', function ($row) {
                 return $row->external_policy ? $row->external_policy->system_name : '';
             });

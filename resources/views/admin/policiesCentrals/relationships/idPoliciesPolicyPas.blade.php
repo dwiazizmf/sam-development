@@ -40,7 +40,10 @@
                                 {{ trans('cruds.policiesCentral.fields.biaya_lainnya') }}
                             </th>
                             <th>
-                                {{ trans('cruds.policiesCentral.fields.periode') }}
+                                {{ trans('cruds.policiesCentral.fields.start_date') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.policiesCentral.fields.end_date') }}
                             </th>
                             <th>
                                 {{ trans('cruds.policyPa.fields.insurance_product') }}
@@ -99,7 +102,10 @@
                                     {{ $policyPa->id_policies->biaya_lainnya ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $policyPa->id_policies->periode ?? '' }}
+                                    {{ $policyPa->id_policies->start_date ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $policyPa->id_policies->end_date ?? '' }}
                                 </td>
                                 <td>
                                     {{ $policyPa->insurance_product->product_name ?? '' }}

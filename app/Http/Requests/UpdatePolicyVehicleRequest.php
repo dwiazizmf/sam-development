@@ -17,6 +17,10 @@ class UpdatePolicyVehicleRequest extends FormRequest
     public function rules()
     {
         return [
+            'id_policies_id' => [
+                'required',
+                'integer',
+            ],
             'merk_type' => [
                 'string',
                 'nullable',

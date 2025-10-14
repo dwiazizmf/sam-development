@@ -10,8 +10,8 @@
         <form method="POST" action="{{ route("admin.policy-vehicles.store") }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
-                <label for="id_policies_id">{{ trans('cruds.policyVehicle.fields.id_policies') }}</label>
-                <select class="form-control select2 {{ $errors->has('id_policies') ? 'is-invalid' : '' }}" name="id_policies_id" id="id_policies_id">
+                <label class="required" for="id_policies_id">{{ trans('cruds.policyVehicle.fields.id_policies') }}</label>
+                <select class="form-control select2 {{ $errors->has('id_policies') ? 'is-invalid' : '' }}" name="id_policies_id" id="id_policies_id" required>
                     @foreach($id_policies as $id => $entry)
                         <option value="{{ $id }}" {{ old('id_policies_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                     @endforeach

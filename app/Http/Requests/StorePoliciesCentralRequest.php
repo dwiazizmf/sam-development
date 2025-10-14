@@ -30,9 +30,13 @@ class StorePoliciesCentralRequest extends FormRequest
                 'required',
                 'integer',
             ],
-            'periode' => [
-                'string',
-                'nullable',
+            'start_date' => [
+                'required',
+                'date_format:' . config('panel.date_format'),
+            ],
+            'end_date' => [
+                'required',
+                'date_format:' . config('panel.date_format'),
             ],
             'premium_amount' => [
                 'required',
@@ -54,9 +58,6 @@ class StorePoliciesCentralRequest extends FormRequest
             ],
             'external_polis_doc' => [
                 'array',
-            ],
-            'data_source' => [
-                'required',
             ],
         ];
     }

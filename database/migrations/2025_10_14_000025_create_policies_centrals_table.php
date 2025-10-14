@@ -12,7 +12,8 @@ class CreatePoliciesCentralsTable extends Migration
             $table->bigIncrements('id');
             $table->string('policy_number')->unique();
             $table->string('policy_number_external')->nullable();
-            $table->string('periode')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');
             $table->decimal('premium_amount', 15, 2);
             $table->float('discount', 15, 2)->nullable();
             $table->float('discount_total', 15, 2)->nullable();
@@ -22,7 +23,6 @@ class CreatePoliciesCentralsTable extends Migration
             $table->decimal('sum_insured', 15, 2);
             $table->string('policy_status');
             $table->string('payment_status');
-            $table->string('data_source');
             $table->timestamps();
             $table->softDeletes();
         });

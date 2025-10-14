@@ -68,8 +68,11 @@ class PolicyTravelController extends Controller
             $table->editColumn('id_policies.biaya_lainnya', function ($row) {
                 return $row->id_policies ? (is_string($row->id_policies) ? $row->id_policies : $row->id_policies->biaya_lainnya) : '';
             });
-            $table->editColumn('id_policies.periode', function ($row) {
-                return $row->id_policies ? (is_string($row->id_policies) ? $row->id_policies : $row->id_policies->periode) : '';
+            $table->editColumn('id_policies.start_date', function ($row) {
+                return $row->id_policies ? (is_string($row->id_policies) ? $row->id_policies : $row->id_policies->start_date) : '';
+            });
+            $table->editColumn('id_policies.end_date', function ($row) {
+                return $row->id_policies ? (is_string($row->id_policies) ? $row->id_policies : $row->id_policies->end_date) : '';
             });
             $table->addColumn('insurance_product_product_code', function ($row) {
                 return $row->insurance_product ? $row->insurance_product->product_code : '';

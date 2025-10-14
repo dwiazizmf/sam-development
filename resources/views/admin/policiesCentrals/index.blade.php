@@ -41,7 +41,10 @@
                         {{ trans('cruds.policiesCentral.fields.insurance_product') }}
                     </th>
                     <th>
-                        {{ trans('cruds.policiesCentral.fields.periode') }}
+                        {{ trans('cruds.policiesCentral.fields.start_date') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.policiesCentral.fields.end_date') }}
                     </th>
                     <th>
                         {{ trans('cruds.policiesCentral.fields.premium_amount') }}
@@ -75,9 +78,6 @@
                     </th>
                     <th>
                         {{ trans('cruds.policiesCentral.fields.assigned_to_user') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.policiesCentral.fields.data_source') }}
                     </th>
                     <th>
                         {{ trans('cruds.policiesCentral.fields.external_policy') }}
@@ -118,7 +118,8 @@
                         </select>
                     </td>
                     <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
+                    </td>
+                    <td>
                     </td>
                     <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
@@ -164,14 +165,6 @@
                             <option value>{{ trans('global.all') }}</option>
                             @foreach($users as $key => $item)
                                 <option value="{{ $item->name }}">{{ $item->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select class="search" strict="true">
-                            <option value>{{ trans('global.all') }}</option>
-                            @foreach(App\Models\PoliciesCentral::DATA_SOURCE_SELECT as $key => $item)
-                                <option value="{{ $key }}">{{ $item }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -251,7 +244,8 @@
 { data: 'policy_number', name: 'policy_number' },
 { data: 'policy_number_external', name: 'policy_number_external' },
 { data: 'insurance_product_product_name', name: 'insurance_product.product_name' },
-{ data: 'periode', name: 'periode' },
+{ data: 'start_date', name: 'start_date' },
+{ data: 'end_date', name: 'end_date' },
 { data: 'premium_amount', name: 'premium_amount' },
 { data: 'discount', name: 'discount' },
 { data: 'discount_total', name: 'discount_total' },
@@ -263,7 +257,6 @@
 { data: 'payment_status', name: 'payment_status' },
 { data: 'external_polis_doc', name: 'external_polis_doc', sortable: false, searchable: false },
 { data: 'assigned_to_user_name', name: 'assigned_to_user.name' },
-{ data: 'data_source', name: 'data_source' },
 { data: 'external_policy_system_name', name: 'external_policy.system_name' },
 { data: 'created_by_name', name: 'created_by.name' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }

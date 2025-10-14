@@ -68,9 +68,6 @@ class PolicyKesehatanController extends Controller
             $table->editColumn('id_policies.biaya_lainnya', function ($row) {
                 return $row->id_policies ? (is_string($row->id_policies) ? $row->id_policies : $row->id_policies->biaya_lainnya) : '';
             });
-            $table->editColumn('id_policies.periode', function ($row) {
-                return $row->id_policies ? (is_string($row->id_policies) ? $row->id_policies : $row->id_policies->periode) : '';
-            });
             $table->addColumn('insurance_product_product_name', function ($row) {
                 return $row->insurance_product ? $row->insurance_product->product_name : '';
             });

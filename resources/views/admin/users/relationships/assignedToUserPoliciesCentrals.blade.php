@@ -37,7 +37,10 @@
                                 {{ trans('cruds.policiesCentral.fields.insurance_product') }}
                             </th>
                             <th>
-                                {{ trans('cruds.policiesCentral.fields.periode') }}
+                                {{ trans('cruds.policiesCentral.fields.start_date') }}
+                            </th>
+                            <th>
+                                {{ trans('cruds.policiesCentral.fields.end_date') }}
                             </th>
                             <th>
                                 {{ trans('cruds.policiesCentral.fields.premium_amount') }}
@@ -73,9 +76,6 @@
                                 {{ trans('cruds.policiesCentral.fields.assigned_to_user') }}
                             </th>
                             <th>
-                                {{ trans('cruds.policiesCentral.fields.data_source') }}
-                            </th>
-                            <th>
                                 {{ trans('cruds.policiesCentral.fields.external_policy') }}
                             </th>
                             <th>
@@ -108,7 +108,10 @@
                                     {{ $policiesCentral->insurance_product->product_name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $policiesCentral->periode ?? '' }}
+                                    {{ $policiesCentral->start_date ?? '' }}
+                                </td>
+                                <td>
+                                    {{ $policiesCentral->end_date ?? '' }}
                                 </td>
                                 <td>
                                     {{ $policiesCentral->premium_amount ?? '' }}
@@ -146,9 +149,6 @@
                                 </td>
                                 <td>
                                     {{ $policiesCentral->assigned_to_user->name ?? '' }}
-                                </td>
-                                <td>
-                                    {{ App\Models\PoliciesCentral::DATA_SOURCE_SELECT[$policiesCentral->data_source] ?? '' }}
                                 </td>
                                 <td>
                                     {{ $policiesCentral->external_policy->system_name ?? '' }}

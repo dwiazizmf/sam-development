@@ -44,7 +44,10 @@
                         {{ trans('cruds.policiesCentral.fields.biaya_lainnya') }}
                     </th>
                     <th>
-                        {{ trans('cruds.policiesCentral.fields.periode') }}
+                        {{ trans('cruds.policiesCentral.fields.start_date') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.policiesCentral.fields.end_date') }}
                     </th>
                     <th>
                         {{ trans('cruds.policyPa.fields.insurance_product') }}
@@ -90,6 +93,8 @@
                                 <option value="{{ $item->policy_number }}">{{ $item->policy_number }}</option>
                             @endforeach
                         </select>
+                    </td>
+                    <td>
                     </td>
                     <td>
                     </td>
@@ -197,7 +202,8 @@
 { data: 'id_policies.discount_total', name: 'id_policies.discount_total' },
 { data: 'id_policies.sum_insured', name: 'id_policies.sum_insured' },
 { data: 'id_policies.biaya_lainnya', name: 'id_policies.biaya_lainnya' },
-{ data: 'id_policies.periode', name: 'id_policies.periode' },
+{ data: 'id_policies.start_date', name: 'id_policies.start_date' },
+{ data: 'id_policies.end_date', name: 'id_policies.end_date' },
 { data: 'insurance_product_product_name', name: 'insurance_product.product_name' },
 { data: 'nama_tertanggung', name: 'nama_tertanggung' },
 { data: 'ttl_tertanggung', name: 'ttl_tertanggung' },

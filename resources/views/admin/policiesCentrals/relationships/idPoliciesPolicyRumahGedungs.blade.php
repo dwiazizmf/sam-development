@@ -40,9 +40,6 @@
                                 {{ trans('cruds.policiesCentral.fields.biaya_lainnya') }}
                             </th>
                             <th>
-                                {{ trans('cruds.policiesCentral.fields.periode') }}
-                            </th>
-                            <th>
                                 {{ trans('cruds.policyRumahGedung.fields.insurance_product') }}
                             </th>
                             <th>
@@ -109,9 +106,6 @@
                                 </td>
                                 <td>
                                     {{ $policyRumahGedung->id_policies->biaya_lainnya ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $policyRumahGedung->id_policies->periode ?? '' }}
                                 </td>
                                 <td>
                                     {{ $policyRumahGedung->insurance_product->product_name ?? '' }}

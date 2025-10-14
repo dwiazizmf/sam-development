@@ -51,12 +51,20 @@
                 <span class="help-block">{{ trans('cruds.policiesCentral.fields.insurance_product_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="periode">{{ trans('cruds.policiesCentral.fields.periode') }}</label>
-                <input class="form-control {{ $errors->has('periode') ? 'is-invalid' : '' }}" type="text" name="periode" id="periode" value="{{ old('periode', $policiesCentral->periode) }}">
-                @if($errors->has('periode'))
-                    <span class="text-danger">{{ $errors->first('periode') }}</span>
+                <label class="required" for="start_date">{{ trans('cruds.policiesCentral.fields.start_date') }}</label>
+                <input class="form-control date {{ $errors->has('start_date') ? 'is-invalid' : '' }}" type="text" name="start_date" id="start_date" value="{{ old('start_date', $policiesCentral->start_date) }}" required>
+                @if($errors->has('start_date'))
+                    <span class="text-danger">{{ $errors->first('start_date') }}</span>
                 @endif
-                <span class="help-block">{{ trans('cruds.policiesCentral.fields.periode_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.policiesCentral.fields.start_date_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label class="required" for="end_date">{{ trans('cruds.policiesCentral.fields.end_date') }}</label>
+                <input class="form-control date {{ $errors->has('end_date') ? 'is-invalid' : '' }}" type="text" name="end_date" id="end_date" value="{{ old('end_date', $policiesCentral->end_date) }}" required>
+                @if($errors->has('end_date'))
+                    <span class="text-danger">{{ $errors->first('end_date') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.policiesCentral.fields.end_date_helper') }}</span>
             </div>
             <div class="form-group">
                 <label class="required" for="premium_amount">{{ trans('cruds.policiesCentral.fields.premium_amount') }}</label>
@@ -160,19 +168,6 @@
                     <span class="text-danger">{{ $errors->first('assigned_to_user') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.policiesCentral.fields.assigned_to_user_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label class="required">{{ trans('cruds.policiesCentral.fields.data_source') }}</label>
-                <select class="form-control {{ $errors->has('data_source') ? 'is-invalid' : '' }}" name="data_source" id="data_source" required>
-                    <option value disabled {{ old('data_source', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                    @foreach(App\Models\PoliciesCentral::DATA_SOURCE_SELECT as $key => $label)
-                        <option value="{{ $key }}" {{ old('data_source', $policiesCentral->data_source) === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('data_source'))
-                    <span class="text-danger">{{ $errors->first('data_source') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.policiesCentral.fields.data_source_helper') }}</span>
             </div>
             <div class="form-group">
                 <label for="external_policy_id">{{ trans('cruds.policiesCentral.fields.external_policy') }}</label>

@@ -57,10 +57,18 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.policiesCentral.fields.periode') }}
+                            {{ trans('cruds.policiesCentral.fields.start_date') }}
                         </th>
                         <td>
-                            {{ $policiesCentral->periode }}
+                            {{ $policiesCentral->start_date }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.policiesCentral.fields.end_date') }}
+                        </th>
+                        <td>
+                            {{ $policiesCentral->end_date }}
                         </td>
                     </tr>
                     <tr>
@@ -153,14 +161,6 @@
                         </th>
                         <td>
                             {{ $policiesCentral->assigned_to_user->name ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.policiesCentral.fields.data_source') }}
-                        </th>
-                        <td>
-                            {{ App\Models\PoliciesCentral::DATA_SOURCE_SELECT[$policiesCentral->data_source] ?? '' }}
                         </td>
                     </tr>
                     <tr>

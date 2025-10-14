@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Auditable;
 use App\Traits\MultiTenantModelTrait;
+use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,22 +23,18 @@ class PoliciesCentral extends Model implements HasMedia
         'external_polis_doc',
     ];
 
-    protected $dates = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
-
     public static $searchable = [
         'policy_number',
         'policy_number_external',
         'policy_status',
     ];
 
-    public const DATA_SOURCE_SELECT = [
-        'manual'   => 'Manual Input',
-        'api_sync' => 'Hook Api',
-        'import'   => 'Import',
+    protected $dates = [
+        'start_date',
+        'end_date',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     public const PAYMENT_STATUS_SELECT = [
@@ -59,7 +56,8 @@ class PoliciesCentral extends Model implements HasMedia
         'policy_number',
         'policy_number_external',
         'insurance_product_id',
-        'periode',
+        'start_date',
+        'end_date',
         'premium_amount',
         'discount',
         'discount_total',
@@ -70,7 +68,6 @@ class PoliciesCentral extends Model implements HasMedia
         'policy_status',
         'payment_status',
         'assigned_to_user_id',
-        'data_source',
         'external_policy_id',
         'created_by_id',
         'created_at',
@@ -137,6 +134,26 @@ class PoliciesCentral extends Model implements HasMedia
     public function insurance_product()
     {
         return $this->belongsTo(InsuranceProduct::class, 'insurance_product_id');
+    }
+
+    public function getStartDateAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setStartDateAttribute($value)
+    {
+        $this->attributes['start_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function getEndDateAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function setEndDateAttribute($value)
+    {
+        $this->attributes['end_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 
     public function getExternalPolisDocAttribute()
