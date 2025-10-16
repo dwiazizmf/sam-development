@@ -1249,5 +1249,9 @@ return [
             'deleted_at_helper'              => ' ',
         ],
     ],
+    'master' => [
+        'title'          => 'Master',
+        'title_singular' => 'Master',
+    ],
 
 ];
