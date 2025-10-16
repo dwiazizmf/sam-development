@@ -301,14 +301,14 @@
                         </ul>
                     </li>
                 @endcan
-                @can('policy_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/insurance-companies*") ? "menu-open" : "" }} {{ request()->is("admin/product-types*") ? "menu-open" : "" }} {{ request()->is("admin/insurance-products*") ? "menu-open" : "" }} {{ request()->is("admin/policies-centrals*") ? "menu-open" : "" }} {{ request()->is("admin/policy-travels*") ? "menu-open" : "" }} {{ request()->is("admin/jenis-pertanggungans*") ? "menu-open" : "" }} {{ request()->is("admin/perluasan-pertanggungans*") ? "menu-open" : "" }} {{ request()->is("admin/policy-vehicles*") ? "menu-open" : "" }} {{ request()->is("admin/policy-motors*") ? "menu-open" : "" }} {{ request()->is("admin/policy-pas*") ? "menu-open" : "" }} {{ request()->is("admin/jenis-rumah-gedungs*") ? "menu-open" : "" }} {{ request()->is("admin/jenis-pakets*") ? "menu-open" : "" }} {{ request()->is("admin/policy-rumah-gedungs*") ? "menu-open" : "" }} {{ request()->is("admin/policy-kesehatans*") ? "menu-open" : "" }} {{ request()->is("admin/api-sync-logs*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/insurance-companies*") ? "active" : "" }} {{ request()->is("admin/product-types*") ? "active" : "" }} {{ request()->is("admin/insurance-products*") ? "active" : "" }} {{ request()->is("admin/policies-centrals*") ? "active" : "" }} {{ request()->is("admin/policy-travels*") ? "active" : "" }} {{ request()->is("admin/jenis-pertanggungans*") ? "active" : "" }} {{ request()->is("admin/perluasan-pertanggungans*") ? "active" : "" }} {{ request()->is("admin/policy-vehicles*") ? "active" : "" }} {{ request()->is("admin/policy-motors*") ? "active" : "" }} {{ request()->is("admin/policy-pas*") ? "active" : "" }} {{ request()->is("admin/jenis-rumah-gedungs*") ? "active" : "" }} {{ request()->is("admin/jenis-pakets*") ? "active" : "" }} {{ request()->is("admin/policy-rumah-gedungs*") ? "active" : "" }} {{ request()->is("admin/policy-kesehatans*") ? "active" : "" }} {{ request()->is("admin/api-sync-logs*") ? "active" : "" }}" href="#">
-                            <i class="fa-fw nav-icon fas fa-book">
+                @can('master_access')
+                    <li class="nav-item has-treeview {{ request()->is("admin/insurance-companies*") ? "menu-open" : "" }} {{ request()->is("admin/product-types*") ? "menu-open" : "" }} {{ request()->is("admin/insurance-products*") ? "menu-open" : "" }} {{ request()->is("admin/jenis-pertanggungans*") ? "menu-open" : "" }} {{ request()->is("admin/perluasan-pertanggungans*") ? "menu-open" : "" }} {{ request()->is("admin/jenis-rumah-gedungs*") ? "menu-open" : "" }} {{ request()->is("admin/jenis-pakets*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/insurance-companies*") ? "active" : "" }} {{ request()->is("admin/product-types*") ? "active" : "" }} {{ request()->is("admin/insurance-products*") ? "active" : "" }} {{ request()->is("admin/jenis-pertanggungans*") ? "active" : "" }} {{ request()->is("admin/perluasan-pertanggungans*") ? "active" : "" }} {{ request()->is("admin/jenis-rumah-gedungs*") ? "active" : "" }} {{ request()->is("admin/jenis-pakets*") ? "active" : "" }}" href="#">
+                            <i class="fa-fw nav-icon fas fa-cogs">
 
                             </i>
                             <p>
-                                {{ trans('cruds.policy.title') }}
+                                {{ trans('cruds.master.title') }}
                                 <i class="right fa fa-fw fa-angle-left nav-icon"></i>
                             </p>
                         </a>
@@ -349,30 +349,6 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('policies_central_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.policies-centrals.index") }}" class="nav-link {{ request()->is("admin/policies-centrals") || request()->is("admin/policies-centrals/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-dollar-sign">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.policiesCentral.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('policy_travel_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.policy-travels.index") }}" class="nav-link {{ request()->is("admin/policy-travels") || request()->is("admin/policy-travels/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-plane-departure">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.policyTravel.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
                             @can('jenis_pertanggungan_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.jenis-pertanggungans.index") }}" class="nav-link {{ request()->is("admin/jenis-pertanggungans") || request()->is("admin/jenis-pertanggungans/*") ? "active" : "" }}">
@@ -393,6 +369,69 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.perluasanPertanggungan.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('jenis_rumah_gedung_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.jenis-rumah-gedungs.index") }}" class="nav-link {{ request()->is("admin/jenis-rumah-gedungs") || request()->is("admin/jenis-rumah-gedungs/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-bullhorn">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.jenisRumahGedung.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('jenis_paket_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.jenis-pakets.index") }}" class="nav-link {{ request()->is("admin/jenis-pakets") || request()->is("admin/jenis-pakets/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-box-open">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.jenisPaket.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcan
+                @can('policy_access')
+                    <li class="nav-item has-treeview {{ request()->is("admin/policies-centrals*") ? "menu-open" : "" }} {{ request()->is("admin/policy-travels*") ? "menu-open" : "" }} {{ request()->is("admin/policy-vehicles*") ? "menu-open" : "" }} {{ request()->is("admin/policy-motors*") ? "menu-open" : "" }} {{ request()->is("admin/policy-pas*") ? "menu-open" : "" }} {{ request()->is("admin/policy-rumah-gedungs*") ? "menu-open" : "" }} {{ request()->is("admin/policy-kesehatans*") ? "menu-open" : "" }} {{ request()->is("admin/api-sync-logs*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/policies-centrals*") ? "active" : "" }} {{ request()->is("admin/policy-travels*") ? "active" : "" }} {{ request()->is("admin/policy-vehicles*") ? "active" : "" }} {{ request()->is("admin/policy-motors*") ? "active" : "" }} {{ request()->is("admin/policy-pas*") ? "active" : "" }} {{ request()->is("admin/policy-rumah-gedungs*") ? "active" : "" }} {{ request()->is("admin/policy-kesehatans*") ? "active" : "" }} {{ request()->is("admin/api-sync-logs*") ? "active" : "" }}" href="#">
+                            <i class="fa-fw nav-icon fas fa-book">
+
+                            </i>
+                            <p>
+                                {{ trans('cruds.policy.title') }}
+                                <i class="right fa fa-fw fa-angle-left nav-icon"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @can('policies_central_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.policies-centrals.index") }}" class="nav-link {{ request()->is("admin/policies-centrals") || request()->is("admin/policies-centrals/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-dollar-sign">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.policiesCentral.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('policy_travel_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.policy-travels.index") }}" class="nav-link {{ request()->is("admin/policy-travels") || request()->is("admin/policy-travels/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-plane-departure">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.policyTravel.title') }}
                                         </p>
                                     </a>
                                 </li>
@@ -429,30 +468,6 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.policyPa.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('jenis_rumah_gedung_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.jenis-rumah-gedungs.index") }}" class="nav-link {{ request()->is("admin/jenis-rumah-gedungs") || request()->is("admin/jenis-rumah-gedungs/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-bullhorn">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.jenisRumahGedung.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('jenis_paket_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.jenis-pakets.index") }}" class="nav-link {{ request()->is("admin/jenis-pakets") || request()->is("admin/jenis-pakets/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-box-open">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.jenisPaket.title') }}
                                         </p>
                                     </a>
                                 </li>
@@ -497,8 +512,8 @@
                     </li>
                 @endcan
                 @can('claim_management_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/claim-type-groups*") ? "menu-open" : "" }} {{ request()->is("admin/claim-types*") ? "menu-open" : "" }} {{ request()->is("admin/document-types-claims*") ? "menu-open" : "" }} {{ request()->is("admin/claims*") ? "menu-open" : "" }} {{ request()->is("admin/detail-document-claims*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/claim-type-groups*") ? "active" : "" }} {{ request()->is("admin/claim-types*") ? "active" : "" }} {{ request()->is("admin/document-types-claims*") ? "active" : "" }} {{ request()->is("admin/claims*") ? "active" : "" }} {{ request()->is("admin/detail-document-claims*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/claim-type-groups*") ? "menu-open" : "" }} {{ request()->is("admin/claim-types*") ? "menu-open" : "" }} {{ request()->is("admin/document-types-claims*") ? "menu-open" : "" }} {{ request()->is("admin/detail-document-claims*") ? "menu-open" : "" }} {{ request()->is("admin/claims*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/claim-type-groups*") ? "active" : "" }} {{ request()->is("admin/claim-types*") ? "active" : "" }} {{ request()->is("admin/document-types-claims*") ? "active" : "" }} {{ request()->is("admin/detail-document-claims*") ? "active" : "" }} {{ request()->is("admin/claims*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-ambulance">
 
                             </i>
@@ -544,18 +559,6 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('claim_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.claims.index") }}" class="nav-link {{ request()->is("admin/claims") || request()->is("admin/claims/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-book">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.claim.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
                             @can('detail_document_claim_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.detail-document-claims.index") }}" class="nav-link {{ request()->is("admin/detail-document-claims") || request()->is("admin/detail-document-claims/*") ? "active" : "" }}">
@@ -564,6 +567,18 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.detailDocumentClaim.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('claim_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.claims.index") }}" class="nav-link {{ request()->is("admin/claims") || request()->is("admin/claims/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-book">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.claim.title') }}
                                         </p>
                                     </a>
                                 </li>
