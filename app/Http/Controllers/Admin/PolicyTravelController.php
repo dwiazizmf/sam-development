@@ -18,6 +18,9 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\UpdatePolicyUnifiedRequest;
+use App\Models\ApiSyncLog;
+use Illuminate\Support\Facades\DB;
 
 class PolicyTravelController extends Controller
 {
@@ -132,60 +135,132 @@ class PolicyTravelController extends Controller
     {
         abort_if(Gate::denies('policy_travel_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $insurance_products = InsuranceProduct::pluck('product_code', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyTravels.create', compact('id_policies', 'insurance_products'));
+        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $isAdmin = auth()->user()->roles->contains(1);
+
+        return view('admin.policyTravels.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin'));
     }
 
-    public function store(StorePolicyTravelRequest $request)
+    public function store(Request $request)
     {
-        $policyTravel = PolicyTravel::create($request->all());
+        try {
+            DB::beginTransaction();
 
-        foreach ($request->input('upload', []) as $file) {
-            $policyTravel->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload');
+            $polisCentral = PoliciesCentral::create($request->only(
+                                            [
+                                                'assigned_to_customer_id',
+                                                'policy_number',
+                                                'policy_number_external',
+                                                'insurance_product_id',
+                                                'start_date',
+                                                'end_date',
+                                                'premium_amount',
+                                                'discount',
+                                                'discount_total',
+                                                'aksessoris_tambahan',
+                                                'aksesoris_harga',
+                                                'biaya_lainnya',
+                                                'sum_insured',
+                                                'policy_status',
+                                                'payment_status',
+                                                'assigned_to_user_id',
+                                            ])
+                            );
+            $policyTravel = PolicyTravel::create(['id_policies_id' => $polisCentral->id] + $request->only(
+                                                [
+                                                    'insurance_product_id',
+                                                    'polis_name',
+                                                    'policyholder_address',
+                                                    'jumlah_wisatawan',
+                                                    'asal_keberangkatan',
+                                                    'tujuan_keberangkatan',
+                                                    'nama_paket',
+                                                    'assigned_to_user_id',
+                                                    'assigned_to_customer_id',
+                                                ])
+                                );
+
+            foreach ($request->input('external_polis_doc', []) as $file) {
+                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
+            }
+
+            if ($media = $request->input('ck-media', false)) {
+                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
+            }
+            
+            DB::commit(); // simpan semua perubahan
+
+            return redirect()->route('admin.policy-travels.index');
+
+        } catch (\Throwable $e) {
+            DB::rollBack(); // batalkan semua kalau error
+
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
-
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $policyTravel->id]);
-        }
-
-        return redirect()->route('admin.policy-travels.index');
     }
 
     public function edit(PolicyTravel $policyTravel)
     {
         abort_if(Gate::denies('policy_travel_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $insurance_products = InsuranceProduct::pluck('product_code', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $policyTravel->load('id_policies', 'insurance_product', 'assigned_to_user', 'assigned_to_customer', 'created_by');
+        $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyTravels.edit', compact('id_policies', 'insurance_products', 'policyTravel'));
+        $external_policies = ApiSyncLog::pluck('system_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        //$policyTravel->load('insurance_product', 'assigned_to_user', 'assigned_to_customer', 'created_by');
+
+        return view('admin.policyTravels.edit', [
+                                                    'policyTravel' => $policyTravel,
+                                                    'policiesCentral' => $policyTravel->id_policies,
+                                                    'assigned_to_customers' => $assigned_to_customers,
+                                                    'assigned_to_users' => $assigned_to_users,
+                                                    'external_policies' => $external_policies,
+                                                    'insurance_products' => $insurance_products,
+                                                ]);
     }
 
-    public function update(UpdatePolicyTravelRequest $request, PolicyTravel $policyTravel)
+    public function update(UpdatePolicyUnifiedRequest $request, PolicyTravel $policyTravel)
     {
-        $policyTravel->update($request->all());
-
-        if (count($policyTravel->upload) > 0) {
-            foreach ($policyTravel->upload as $media) {
-                if (! in_array($media->file_name, $request->input('upload', []))) {
-                    $media->delete();
+        DB::beginTransaction();
+        try {
+            // Insert ke tabel central
+            $policiesCentral = $policyTravel->id_policies;
+            $policiesCentral->update($request->centralData());
+            // Insert ke child sesuai type
+            $childData = $request->childData();
+            $childData['id_policies_id'] = $policiesCentral->id;
+            $policyTravel->update($childData);
+           
+            if (count($policiesCentral->external_polis_doc) > 0) {
+                foreach ($policiesCentral->external_polis_doc as $media) {
+                    if (! in_array($media->file_name, $request->input('external_polis_doc', []))) {
+                        $media->delete();
+                    }
                 }
             }
-        }
-        $media = $policyTravel->upload->pluck('file_name')->toArray();
-        foreach ($request->input('upload', []) as $file) {
-            if (count($media) === 0 || ! in_array($file, $media)) {
-                $policyTravel->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload');
+            $media = $policiesCentral->external_polis_doc->pluck('file_name')->toArray();
+            foreach ($request->input('external_polis_doc', []) as $file) {
+                if (count($media) === 0 || ! in_array($file, $media)) {
+                    $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
+                }
             }
-        }
 
-        return redirect()->route('admin.policy-travels.index');
+            DB::commit();
+            return redirect()->route('admin.policy-travels.index');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Gagal menyimpan polis', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
+        }
     }
 
     public function show(PolicyTravel $policyTravel)

@@ -9,6 +9,7 @@ use App\Http\Requests\MassDestroyPolicyVehicleRequest;
 use App\Http\Requests\StorePolicyVehicleRequest;
 use App\Http\Requests\UpdatePolicyVehicleRequest;
 use App\Models\CrmCustomer;
+use App\Models\InsuranceProduct;
 use App\Models\JenisPertanggungan;
 use App\Models\PerluasanPertanggungan;
 use App\Models\PoliciesCentral;
@@ -19,6 +20,11 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+
+use App\Http\Requests\StorePolicyUnifiedRequest;
+use App\Http\Requests\UpdatePolicyUnifiedRequest;
+use App\Models\ApiSyncLog;
+use Illuminate\Support\Facades\DB;
 
 class PolicyVehicleController extends Controller
 {
@@ -139,65 +145,138 @@ class PolicyVehicleController extends Controller
     public function create()
     {
         abort_if(Gate::denies('policy_vehicle_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+       
+        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $isAdmin = auth()->user()->roles->contains(1);
 
         $jenis_pertanggungans = JenisPertanggungan::pluck('jenis_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $perluasan_pertanggungans = PerluasanPertanggungan::pluck('pertanggungan_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyVehicles.create', compact('id_policies', 'jenis_pertanggungans', 'perluasan_pertanggungans'));
+        return view('admin.policyVehicles.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin', 'jenis_pertanggungans', 'perluasan_pertanggungans'));
     }
 
-    public function store(StorePolicyVehicleRequest $request)
+    public function store(StorePolicyUnifiedRequest $request, PolicyVehicle $PolicyVehicle)
     {
-        $policyVehicle = PolicyVehicle::create($request->all());
+        DB::beginTransaction();
 
-        foreach ($request->input('upload_kendaraan', []) as $file) {
-            $policyVehicle->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
+        try {
+            $policiesCentral = $policyVehicle->id_policies;
+            $policiesCentral->create($request->centralData());
+
+            foreach ($request->input('external_polis_doc', []) as $file) {
+                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
+            }
+
+            if ($media = $request->input('ck-media', false)) {
+                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
+            }
+
+            $childData = $request->childData();
+            $childData['id_policies_id'] = $policiesCentral->id;
+            $policyVehicle->create($childData);
+
+            foreach ($request->input('upload_kendaraan', []) as $file) {
+                $policyVehicle->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
+            }
+
+            if ($media = $request->input('ck-media', false)) {
+                Media::whereIn('id', $media)->update(['model_id' => $policyVehicle->id]);
+            }
+
+            DB::commit(); // simpan semua perubahan
+
+            return redirect()->route('admin.policy-vehicles.index');
+
+        } catch (\Throwable $e) {
+            DB::rollBack(); // batalkan semua kalau error
+
+            return back()->withErrors(['error' => $e->getMessage()]);
         }
-
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $policyVehicle->id]);
-        }
-
-        return redirect()->route('admin.policy-vehicles.index');
     }
 
     public function edit(PolicyVehicle $policyVehicle)
     {
         abort_if(Gate::denies('policy_vehicle_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $external_policies = ApiSyncLog::pluck('system_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pertanggungans = JenisPertanggungan::pluck('jenis_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $perluasan_pertanggungans = PerluasanPertanggungan::pluck('pertanggungan_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $policyVehicle->load('id_policies', 'jenis_pertanggungan', 'perluasan_pertanggungan', 'assigned_to_user', 'assigned_to_customer', 'created_by');
+        //$policyVehicle->load('id_policies', 'jenis_pertanggungan', 'perluasan_pertanggungan', 'assigned_to_user', 'assigned_to_customer', 'created_by');
 
-        return view('admin.policyVehicles.edit', compact('id_policies', 'jenis_pertanggungans', 'perluasan_pertanggungans', 'policyVehicle'));
+        return view('admin.policyVehicles.edit', [
+            'policiesCentral' => $policyVehicle->id_policies,
+            'assigned_to_customers' => $assigned_to_customers,
+            'insurance_products' => $insurance_products,
+            'assigned_to_users' => $assigned_to_users,
+            'external_policies' => $external_policies,
+            'jenis_pertanggungans' => $jenis_pertanggungans, 
+            'perluasan_pertanggungans' => $perluasan_pertanggungans, 
+            'policyVehicle' => $policyVehicle
+        ]);
     }
 
-    public function update(UpdatePolicyVehicleRequest $request, PolicyVehicle $policyVehicle)
+    public function update(UpdatePolicyUnifiedRequest $request, PolicyVehicle $policyVehicle)
     {
-        $policyVehicle->update($request->all());
-
-        if (count($policyVehicle->upload_kendaraan) > 0) {
-            foreach ($policyVehicle->upload_kendaraan as $media) {
-                if (! in_array($media->file_name, $request->input('upload_kendaraan', []))) {
-                    $media->delete();
+        DB::beginTransaction();
+        try {
+            // Insert ke tabel central
+            $policiesCentral = $policyVehicle->id_policies;
+            $policiesCentral->update($request->centralData());
+            // Insert ke child sesuai type
+            $childData = $request->childData();
+            $childData['id_policies_id'] = $policiesCentral->id;
+            $policyVehicle->update($childData);
+           
+            if (count($policiesCentral->external_polis_doc) > 0) {
+                foreach ($policiesCentral->external_polis_doc as $media) {
+                    if (! in_array($media->file_name, $request->input('external_polis_doc', []))) {
+                        $media->delete();
+                    }
                 }
             }
-        }
-        $media = $policyVehicle->upload_kendaraan->pluck('file_name')->toArray();
-        foreach ($request->input('upload_kendaraan', []) as $file) {
-            if (count($media) === 0 || ! in_array($file, $media)) {
-                $policyVehicle->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
+            $media = $policiesCentral->external_polis_doc->pluck('file_name')->toArray();
+            foreach ($request->input('external_polis_doc', []) as $file) {
+                if (count($media) === 0 || ! in_array($file, $media)) {
+                    $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
+                }
             }
-        }
 
-        return redirect()->route('admin.policy-vehicles.index');
+            if (count($policyVehicle->upload_kendaraan) > 0) {
+                foreach ($policyVehicle->upload_kendaraan as $media) {
+                    if (! in_array($media->file_name, $request->input('upload_kendaraan', []))) {
+                        $media->delete();
+                    }
+                }
+            }
+            $media = $policyVehicle->upload_kendaraan->pluck('file_name')->toArray();
+            foreach ($request->input('upload_kendaraan', []) as $file) {
+                if (count($media) === 0 || ! in_array($file, $media)) {
+                    $policyVehicle->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('admin.policy-vehicles.index');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            \Log::error('Gagal menyimpan polis', ['error' => $e->getMessage()]);
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
+        }
     }
 
     public function show(PolicyVehicle $policyVehicle)
