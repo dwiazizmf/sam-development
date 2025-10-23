@@ -18,6 +18,7 @@ class UpdatePolicyTravelRequest extends FormRequest
     {
         return [
             'id_policies_id' => [
+                'required',
                 'integer',
             ],
             'polis_name' => [

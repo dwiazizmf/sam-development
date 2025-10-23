@@ -18,6 +18,7 @@ class UpdatePolicyRumahGedungRequest extends FormRequest
     {
         return [
             'id_policies_id' => [
+                'required',
                 'integer',
             ],
             'lokasi_pertanggungan' => [

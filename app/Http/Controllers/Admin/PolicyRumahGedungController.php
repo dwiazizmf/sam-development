@@ -20,7 +20,6 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
 
 class PolicyRumahGedungController extends Controller
 {
@@ -139,90 +138,30 @@ class PolicyRumahGedungController extends Controller
     {
         abort_if(Gate::denies('policy_rumah_gedung_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $isAdmin = auth()->user()->roles->contains(1);
 
         $jenis_rumah_gedungs = JenisRumahGedung::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pakets = JenisPaket::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyRumahGedungs.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin', 'jenis_pakets', 'jenis_rumah_gedungs'));
+        return view('admin.policyRumahGedungs.create', compact('id_policies', 'insurance_products', 'jenis_pakets', 'jenis_rumah_gedungs'));
     }
 
-    public function store(Request $request)
+    public function store(StorePolicyRumahGedungRequest $request)
     {
-        DB::beginTransaction();
+        $policyRumahGedung = PolicyRumahGedung::create($request->all());
 
-        try {
-            $polisCentral = PoliciesCentral::create($request->only(
-                                            [
-                                                'assigned_to_customer_id',
-                                                'policy_number',
-                                                'policy_number_external',
-                                                'insurance_product_id',
-                                                'start_date',
-                                                'end_date',
-                                                'premium_amount',
-                                                'discount',
-                                                'discount_total',
-                                                'aksessoris_tambahan',
-                                                'aksesoris_harga',
-                                                'biaya_lainnya',
-                                                'sum_insured',
-                                                'policy_status',
-                                                'payment_status',
-                                                'assigned_to_user_id',
-                                            ])
-                            );
-
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
-            }
-
-            $policyRumahGedung = PolicyRumahGedung::create(['id_policies_id' => $polisCentral->id] + $request->only(
-                [
-                    'insurance_product_id',
-                    'lokasi_pertanggungan',
-                    'jenis_rumah_gedung_id',
-                    'keterangan',
-                    'jenis_paket_id',
-                    'nama_tertanggung',
-                    'ttl_tertanggung',
-                    'alamat_tertanggung',
-                    'email',
-                    'no_phone',
-                    'nama_paket',
-                    'assigned_to_user_id',
-                    'assigned_to_customer_id',
-                ]
-            ));
-
-            foreach ($request->input('upload_dokumen', []) as $file) {
-                $policyRumahGedung->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policyRumahGedung->id]);
-            }
-
-            DB::commit(); // simpan semua perubahan
-
-            return redirect()->route('admin.policy-rumah-gedungs.index');
-
-        } catch (\Throwable $e) {
-            DB::rollBack(); // batalkan semua kalau error
-
-            return back()->withErrors(['error' => $e->getMessage()]);
+        foreach ($request->input('upload_dokumen', []) as $file) {
+            $policyRumahGedung->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
         }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $policyRumahGedung->id]);
+        }
+
+        return redirect()->route('admin.policy-rumah-gedungs.index');
     }
 
     public function edit(PolicyRumahGedung $policyRumahGedung)

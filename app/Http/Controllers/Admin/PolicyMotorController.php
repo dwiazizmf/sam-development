@@ -9,7 +9,6 @@ use App\Http\Requests\MassDestroyPolicyMotorRequest;
 use App\Http\Requests\StorePolicyMotorRequest;
 use App\Http\Requests\UpdatePolicyMotorRequest;
 use App\Models\CrmCustomer;
-use App\Models\InsuranceProduct;
 use App\Models\JenisPertanggungan;
 use App\Models\PerluasanPertanggungan;
 use App\Models\PoliciesCentral;
@@ -20,7 +19,6 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
 
 class PolicyMotorController extends Controller
 {
@@ -142,93 +140,28 @@ class PolicyMotorController extends Controller
     {
         abort_if(Gate::denies('policy_motor_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $isAdmin = auth()->user()->roles->contains(1);
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pertanggungans = JenisPertanggungan::pluck('jenis_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $perluasan_pertanggungans = PerluasanPertanggungan::pluck('pertanggungan_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyMotors.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin', 'jenis_pertanggungans', 'perluasan_pertanggungans'));
+        return view('admin.policyMotors.create', compact('id_policies', 'jenis_pertanggungans', 'perluasan_pertanggungans'));
     }
 
     public function store(StorePolicyMotorRequest $request)
     {
-        DB::beginTransaction();
+        $policyMotor = PolicyMotor::create($request->all());
 
-        try {
-            $polisCentral = PoliciesCentral::create($request->only(
-                                            [
-                                                'assigned_to_customer_id',
-                                                'policy_number',
-                                                'policy_number_external',
-                                                'insurance_product_id',
-                                                'start_date',
-                                                'end_date',
-                                                'premium_amount',
-                                                'discount',
-                                                'discount_total',
-                                                'aksessoris_tambahan',
-                                                'aksesoris_harga',
-                                                'biaya_lainnya',
-                                                'sum_insured',
-                                                'policy_status',
-                                                'payment_status',
-                                                'assigned_to_user_id',
-                                            ])
-                            );
-
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
-            }
-
-            $policyMotor = PolicyMotor::create(['id_policies_id' => $polisCentral->id] + $request->only(
-                [
-                    'merk_type',
-                    'warna_kendaraan',
-                    'tahun_pembuatan',
-                    'no_polisi',
-                    'no_rangka',
-                    'no_mesin',
-                    'nama_tertanggung',
-                    'alamat_tertanggung',
-                    'email',
-                    'no_hp',
-                    'nilai_pertanggungan',
-                    'jenis_pertanggungan_id',
-                    'perluasan_pertanggungan_id',
-                    'sertifikat_no',
-                    'assigned_to_user_id',
-                    'assigned_to_customer_id'
-                ]
-            ));
-
-            foreach ($request->input('upload_kendaraan', []) as $file) {
-                $policyMotor->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policyMotor->id]);
-            }
-
-            DB::commit(); // simpan semua perubahan
-
-            return redirect()->route('admin.policy-motors.index');
-
-        } catch (\Throwable $e) {
-            DB::rollBack(); // batalkan semua kalau error
-
-            return back()->withErrors(['error' => $e->getMessage()]);
+        foreach ($request->input('upload_kendaraan', []) as $file) {
+            $policyMotor->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
         }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $policyMotor->id]);
+        }
+
+        return redirect()->route('admin.policy-motors.index');
     }
 
     public function edit(PolicyMotor $policyMotor)
