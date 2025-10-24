@@ -11,15 +11,15 @@ class StorePolicyUnifiedRequest extends FormRequest
     public function authorize()
     {
         $type = $this->getPolicyType();
-        $canCentral = Gate::allows('policies_central_edit');
+        $canCentral = Gate::allows('policies_central_create');
 
         $canSub = match ($type) {
-            'travel'  => Gate::allows('policy_travel_edit'),
-            'mobil'  => Gate::allows('policy_vehicle_edit'),
-            'motor'      => Gate::allows('policy_motor_edit'),
-            'pa' => Gate::allows('policy_pa_edit'),
-            'rumahGedung' => Gate::allows('policy_rumah_gedung_edit'),
-            'kesehatan' => Gate::allows('policy_kesehatan_edit'),
+            'travel'  => Gate::allows('policy_travel_create'),
+            'mobil'  => Gate::allows('policy_vehicle_create'),
+            'motor'      => Gate::allows('policy_motor_create'),
+            'pa' => Gate::allows('policy_pa_create'),
+            'rumahGedung' => Gate::allows('policy_rumah_gedung_create'),
+            'kesehatan' => Gate::allows('policy_kesehatan_create'),
             default   => false,
         };
 
@@ -43,7 +43,10 @@ class StorePolicyUnifiedRequest extends FormRequest
 
     public function centralData(): array
     {
-        return $this->only(array_keys((new StorePoliciesCentralRequest())->rules()));
+        return array_merge(
+            $this->only(array_keys((new StorePoliciesCentralRequest())->rules())),
+            ['created_by_id' => auth()->id()]
+        );
     }
 
     public function childData(): array
@@ -58,7 +61,7 @@ class StorePolicyUnifiedRequest extends FormRequest
             default   => throw new \InvalidArgumentException("Unknown policy type: {$type}"),
         };
 
-        return $this->only(array_keys($rules));
+        return array_merge($this->only(array_keys($rules)), ['created_by_id' => auth()->id()]);
     }
 
     public function getPolicyType(): ?string

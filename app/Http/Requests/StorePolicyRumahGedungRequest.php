@@ -17,10 +17,10 @@ class StorePolicyRumahGedungRequest extends FormRequest
     public function rules()
     {
         return [
-            'id_policies_id' => [
-                'required',
-                'integer',
-            ],
+            // 'id_policies_id' => [
+            //     'required',
+            //     'integer',
+            // ],
             'lokasi_pertanggungan' => [
                 'string',
                 'nullable',

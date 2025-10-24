@@ -36,8 +36,10 @@ class PoliciesCentralController extends Controller
 
             $table->editColumn('actions', function ($row) {
                 $viewGate      = 'policies_central_show';
-                $editGate      = 'policies_central_edit';
-                $deleteGate    = 'policies_central_delete';
+                //$editGate      = 'policies_central_edit';
+                $editGate      = false;
+                //$deleteGate    = 'policies_central_delete';
+                $deleteGate    = false;
                 $crudRoutePart = 'policies-centrals';
 
                 return view('partials.datatablesActions', compact(

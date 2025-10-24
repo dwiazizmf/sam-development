@@ -19,6 +19,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\UpdatePolicyUnifiedRequest;
+use App\Http\Requests\StorePolicyUnifiedRequest;
 use App\Models\ApiSyncLog;
 use Illuminate\Support\Facades\DB;
 
@@ -146,45 +147,14 @@ class PolicyTravelController extends Controller
         return view('admin.policyTravels.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin'));
     }
 
-    public function store(Request $request)
+    public function store(StorePolicyUnifiedRequest $request, PolicyTravel $policyTravel)
     {
+        abort_if(Gate::denies('policy_travel_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             DB::beginTransaction();
 
-            $polisCentral = PoliciesCentral::create($request->only(
-                                            [
-                                                'assigned_to_customer_id',
-                                                'policy_number',
-                                                'policy_number_external',
-                                                'insurance_product_id',
-                                                'start_date',
-                                                'end_date',
-                                                'premium_amount',
-                                                'discount',
-                                                'discount_total',
-                                                'aksessoris_tambahan',
-                                                'aksesoris_harga',
-                                                'biaya_lainnya',
-                                                'sum_insured',
-                                                'policy_status',
-                                                'payment_status',
-                                                'assigned_to_user_id',
-                                            ])
-                            );
-            $policyTravel = PolicyTravel::create(['id_policies_id' => $polisCentral->id] + $request->only(
-                                                [
-                                                    'insurance_product_id',
-                                                    'polis_name',
-                                                    'policyholder_address',
-                                                    'jumlah_wisatawan',
-                                                    'asal_keberangkatan',
-                                                    'tujuan_keberangkatan',
-                                                    'nama_paket',
-                                                    'assigned_to_user_id',
-                                                    'assigned_to_customer_id',
-                                                ])
-                                );
-
+            //insert ke central
+            $policiesCentral = PoliciesCentral::create($request->centralData());
             foreach ($request->input('external_polis_doc', []) as $file) {
                 $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
             }
@@ -192,6 +162,11 @@ class PolicyTravelController extends Controller
             if ($media = $request->input('ck-media', false)) {
                 Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
             }
+
+            // Insert ke child sesuai type
+            $childData = $request->childData();
+            $childData['id_policies_id'] = $policiesCentral->id;
+            $policyTravel->create($childData);
             
             DB::commit(); // simpan semua perubahan
 
@@ -214,8 +189,7 @@ class PolicyTravelController extends Controller
 
         $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $external_policies = ApiSyncLog::pluck('system_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
+        $isAdmin = auth()->user()->roles->contains(1);
         //$policyTravel->load('insurance_product', 'assigned_to_user', 'assigned_to_customer', 'created_by');
 
         return view('admin.policyTravels.edit', [
@@ -223,15 +197,16 @@ class PolicyTravelController extends Controller
                                                     'policiesCentral' => $policyTravel->id_policies,
                                                     'assigned_to_customers' => $assigned_to_customers,
                                                     'assigned_to_users' => $assigned_to_users,
-                                                    'external_policies' => $external_policies,
                                                     'insurance_products' => $insurance_products,
+                                                    'isAdmin' => $isAdmin
                                                 ]);
     }
 
     public function update(UpdatePolicyUnifiedRequest $request, PolicyTravel $policyTravel)
     {
-        DB::beginTransaction();
+        abort_if(Gate::denies('policy_travel_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
+            DB::beginTransaction();
             // Insert ke tabel central
             $policiesCentral = $policyTravel->id_policies;
             $policiesCentral->update($request->centralData());

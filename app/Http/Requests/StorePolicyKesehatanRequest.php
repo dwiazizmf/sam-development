@@ -17,10 +17,10 @@ class StorePolicyKesehatanRequest extends FormRequest
     public function rules()
     {
         return [
-            'id_policies_id' => [
-                'required',
-                'integer',
-            ],
+            // 'id_policies_id' => [
+            //     'required',
+            //     'integer',
+            // ],
             'nama_tertanggung' => [
                 'string',
                 'nullable',
