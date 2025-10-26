@@ -108,11 +108,11 @@ class PolicyTravelController extends Controller
             });
 
             $table->editColumn('upload', function ($row) {
-                if (! $row->upload) {
+                if (! $row->id_policies->external_polis_doc) {
                     return '';
                 }
                 $links = [];
-                foreach ($row->upload as $media) {
+                foreach ($row->id_policies->external_polis_doc as $media) {
                     $links[] = '<a href="' . $media->getUrl() . '" target="_blank">' . trans('global.downloadFile') . '</a>';
                 }
 

@@ -333,36 +333,36 @@
         maxFilesize: 2, // MB
         addRemoveLinks: true,
         headers: {
-        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
         },
         params: {
-        size: 2
+            size: 2
         },
         success: function (file, response) {
-        $('form').append('<input type="hidden" name="upload_kendaraan[]" value="' + response.name + '">')
-        uploadedUploadKendaraanMap[file.name] = response.name
+            $('form').append('<input type="hidden" name="upload_kendaraan[]" value="' + response.name + '">')
+            uploadedUploadKendaraanMap[file.name] = response.name
         },
         removedfile: function (file) {
-        file.previewElement.remove()
-        var name = ''
-        if (typeof file.file_name !== 'undefined') {
-            name = file.file_name
-        } else {
-            name = uploadedUploadKendaraanMap[file.name]
-        }
-        $('form').find('input[name="upload_kendaraan[]"][value="' + name + '"]').remove()
+            file.previewElement.remove()
+            var name = ''
+            if (typeof file.file_name !== 'undefined') {
+                name = file.file_name
+            } else {
+                name = uploadedUploadKendaraanMap[file.name]
+            }
+            $('form').find('input[name="upload_kendaraan[]"][value="' + name + '"]').remove()
         },
         init: function () {
-        @if(isset($policyVehicle) && $policyVehicle->upload_kendaraan)
-                var files =
-                    {!! json_encode($policyVehicle->upload_kendaraan) !!}
-                    for (var i in files) {
-                    var file = files[i]
-                    this.options.addedfile.call(this, file)
-                    file.previewElement.classList.add('dz-complete')
-                    $('form').append('<input type="hidden" name="upload_kendaraan[]" value="' + file.file_name + '">')
-                    }
-        @endif
+            @if(isset($policyVehicle) && $policyVehicle->upload_kendaraan)
+                    var files =
+                        {!! json_encode($policyVehicle->upload_kendaraan) !!}
+                        for (var i in files) {
+                            var file = files[i]
+                            this.options.addedfile.call(this, file)
+                            file.previewElement.classList.add('dz-complete')
+                            $('form').append('<input type="hidden" name="upload_kendaraan[]" value="' + file.file_name + '">')
+                        }
+            @endif
         },
         error: function (file, response) {
             if ($.type(response) === 'string') {
@@ -388,24 +388,24 @@
         maxFilesize: 2, // MB
         addRemoveLinks: true,
         headers: {
-        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
         },
         params: {
-        size: 2
+            size: 2
         },
         success: function (file, response) {
-        $('form').append('<input type="hidden" name="external_polis_doc[]" value="' + response.name + '">')
-        uploadedExternalPolisDocMap[file.name] = response.name
+            $('form').append('<input type="hidden" name="external_polis_doc[]" value="' + response.name + '">')
+            uploadedExternalPolisDocMap[file.name] = response.name
         },
         removedfile: function (file) {
-        file.previewElement.remove()
-        var name = ''
-        if (typeof file.file_name !== 'undefined') {
-            name = file.file_name
-        } else {
-            name = uploadedExternalPolisDocMap[file.name]
-        }
-        $('form').find('input[name="external_polis_doc[]"][value="' + name + '"]').remove()
+            file.previewElement.remove()
+            var name = ''
+            if (typeof file.file_name !== 'undefined') {
+                name = file.file_name
+            } else {
+                name = uploadedExternalPolisDocMap[file.name]
+            }
+            $('form').find('input[name="external_polis_doc[]"][value="' + name + '"]').remove()
         },
         init: function () {
             @if(isset($policiesCentral) && $policiesCentral->external_polis_doc)
@@ -418,23 +418,23 @@
                         $('form').append('<input type="hidden" name="external_polis_doc[]" value="' + file.file_name + '">')
                         }
             @endif
-                },
-                error: function (file, response) {
-                    if ($.type(response) === 'string') {
-                        var message = response //dropzone sends it's own error messages in string
-                    } else {
-                        var message = response.errors.file
-                    }
-                    file.previewElement.classList.add('dz-error')
-                    _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
-                    _results = []
-                    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                        node = _ref[_i]
-                        _results.push(node.textContent = message)
-                    }
+        },
+        error: function (file, response) {
+            if ($.type(response) === 'string') {
+                var message = response //dropzone sends it's own error messages in string
+            } else {
+                var message = response.errors.file
+            }
+            file.previewElement.classList.add('dz-error')
+            _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
+            _results = []
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                node = _ref[_i]
+                _results.push(node.textContent = message)
+            }
 
-                    return _results
-                }
+            return _results
+        }
     }
 </script>
 @endsection
