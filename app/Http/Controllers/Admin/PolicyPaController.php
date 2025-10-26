@@ -161,14 +161,14 @@ class PolicyPaController extends Controller
 
             $childData = $request->childData();
             $childData['id_policies_id'] = $policiesCentral->id;
-            $policyPa->create($childData);
-
+            $subPolis = $policyPa->create($childData);
+            
             foreach ($request->input('upload_dokumen', []) as $file) {
-                $policyPa->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
+                $subPolis->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
             }
 
             if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policyPa->id]);
+                Media::whereIn('id', $media)->update(['model_id' => $subPolis->id]);
             }
 
             DB::commit(); // simpan semua perubahan

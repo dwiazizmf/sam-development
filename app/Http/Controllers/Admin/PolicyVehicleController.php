@@ -178,14 +178,14 @@ class PolicyVehicleController extends Controller
 
             $childData = $request->childData();
             $childData['id_policies_id'] = $policiesCentral->id;
-            $policyVehicle->create($childData);
+            $subPolis = $policyVehicle->create($childData);
 
             foreach ($request->input('upload_kendaraan', []) as $file) {
-                $policyVehicle->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
+                $subPolis->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
             }
 
             if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policyVehicle->id]);
+                Media::whereIn('id', $media)->update(['model_id' => $subPolis->id]);
             }
 
             DB::commit(); // simpan semua perubahan

@@ -175,14 +175,14 @@ class PolicyRumahGedungController extends Controller
 
             $childData = $request->childData();
             $childData['id_policies_id'] = $policiesCentral->id;
-            $policyRumahGedung->create($childData);
+            $subPolis = $policyRumahGedung->create($childData);
 
             foreach ($request->input('upload_dokumen', []) as $file) {
-                $policyRumahGedung->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
+                $subPolis->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
             }
 
             if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policyRumahGedung->id]);
+                Media::whereIn('id', $media)->update(['model_id' => $subPolis->id]);
             }
 
             DB::commit(); // simpan semua perubahan
