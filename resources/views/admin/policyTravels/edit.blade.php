@@ -160,6 +160,7 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.policiesCentral.fields.external_polis_doc_helper') }}</span>
             </div>
+            @if($isAdmin)
             <div class="form-group">
                 <label for="assigned_to_user_id">{{ trans('cruds.policiesCentral.fields.assigned_to_user') }}</label>
                 <select class="form-control select2 {{ $errors->has('assigned_to_user') ? 'is-invalid' : '' }}" name="assigned_to_user_id" id="assigned_to_user_id">
@@ -172,18 +173,9 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.policiesCentral.fields.assigned_to_user_helper') }}</span>
             </div>
-            <div class="form-group">
-                <label for="external_policy_id">{{ trans('cruds.policiesCentral.fields.external_policy') }}</label>
-                <select class="form-control select2 {{ $errors->has('external_policy') ? 'is-invalid' : '' }}" name="external_policy_id" id="external_policy_id">
-                    @foreach($external_policies as $id => $entry)
-                        <option value="{{ $id }}" {{ (old('external_policy_id') ? old('external_policy_id') : $policiesCentral->external_policy->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                    @endforeach
-                </select>
-                @if($errors->has('external_policy'))
-                    <span class="text-danger">{{ $errors->first('external_policy') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.policiesCentral.fields.external_policy_helper') }}</span>
-            </div>
+            @else
+                <input type="hidden" name="assigned_to_user_id" id="assigned_to_user_id" value="{{ Auth::user()->id }}">
+            @endif
     </div>
 </div>
 

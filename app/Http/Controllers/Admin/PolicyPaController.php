@@ -144,7 +144,7 @@ class PolicyPaController extends Controller
 
     public function store(StorePolicyUnifiedRequest $request, PolicyPa $policyPa)
     {
-        abort_if(Gate::denies('policy_pa_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        //abort_if(Gate::denies('policy_pa_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
             DB::beginTransaction();

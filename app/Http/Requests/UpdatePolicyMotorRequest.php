@@ -18,7 +18,7 @@ class UpdatePolicyMotorRequest extends FormRequest
     {
         return [
             'id_policies_id' => [
-                'required',
+                'integer',
             ],
             'merk_type' => [
                 'string',

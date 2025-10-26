@@ -169,7 +169,7 @@ class PolicyKesehatanController extends Controller
 
             DB::commit(); // simpan semua perubahan
 
-            return redirect()->route('admin.policy-rumah-gedungs.index');
+            return redirect()->route('admin.policy-kesehatans.index');
 
         } catch (\Throwable $e) {
             DB::rollBack(); // batalkan semua kalau error
@@ -244,10 +244,8 @@ class PolicyKesehatanController extends Controller
                 }
             }
 
-            return redirect()->route('admin.policy-kesehatans.index');
-
             DB::commit();
-            return redirect()->route('admin.policy-rumah-gedungs.index');
+            return redirect()->route('admin.policy-kesehatans.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             \Log::error('Gagal menyimpan polis', ['error' => $e->getMessage()]);

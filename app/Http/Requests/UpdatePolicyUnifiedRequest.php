@@ -67,9 +67,9 @@ class UpdatePolicyUnifiedRequest extends FormRequest
             'policy-travels'  => 'travel',
             'policy-vehicles'  => 'mobil',
             'policy-motors'      => 'motor',
-            'plicy-pas' => 'pa',
-            'plicy-rumah-gedungs' => 'rumahGedung',
-            'plicy-kesehatans' => 'kesehatan',
+            'policy-pas' => 'pa',
+            'policy-rumah-gedungs' => 'rumahGedung',
+            'policy-kesehatans' => 'kesehatan',
             default   => '',
         };;
 
