@@ -39,8 +39,7 @@ class SystemCalendarController extends Controller
         $events = [];
         foreach ($this->sources as $source) {
             foreach ($source['model']::all() as $model) {
-                $crudFieldValue = $model->getAttributes()[$source['date_field']];
-
+                $crudFieldValue = $model->getAttributes()['end_date'];
                 if (! $crudFieldValue) {
                     continue;
                 }

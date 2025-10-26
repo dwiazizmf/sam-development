@@ -17,10 +17,9 @@ class StorePolicyKesehatanRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'id_policies_id' => [
-            //     'required',
-            //     'integer',
-            // ],
+            'id_policies_id' => [
+                'integer',
+            ],
             'nama_tertanggung' => [
                 'string',
                 'nullable',
@@ -43,6 +42,20 @@ class StorePolicyKesehatanRequest extends FormRequest
             ],
             'upload_dokumen' => [
                 'array',
+            ],
+            'assigned_to_user_id' => [
+                'integer',
+            ],
+             'assigned_to_customer_id' => [
+                'integer',
+            ],
+            'email' => [
+                'string',
+                'nullable',
+            ],
+            'insurance_product_id' => [
+                'required',
+                'integer',
             ],
         ];
     }

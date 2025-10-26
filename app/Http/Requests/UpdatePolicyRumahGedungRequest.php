@@ -47,6 +47,30 @@ class UpdatePolicyRumahGedungRequest extends FormRequest
             'upload_dokumen' => [
                 'array',
             ],
+            'email' => [
+                'string',
+                'nullable',
+            ],
+            'keterangan' => [
+                'string',
+                'nullable',
+            ],
+            'assigned_to_user_id' => [
+                'integer',
+            ],
+             'assigned_to_customer_id' => [
+                'integer',
+            ],
+            'insurance_product_id' => [
+                'required',
+                'integer',
+            ],
+            'jenis_rumah_gedung_id' => [
+                'integer',
+            ],
+            'jenis_paket_id' => [
+                'integer',
+            ]
         ];
     }
 }

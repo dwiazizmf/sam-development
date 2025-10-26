@@ -61,6 +61,34 @@ class UpdatePolicyMotorRequest extends FormRequest
             'upload_kendaraan' => [
                 'array',
             ],
+            'alamat_tertanggung' => [
+                'string',
+                'nullable',
+            ],
+            'email' => [
+                'nullable', 
+                'string', 
+                'email', 
+                'max:255'
+            ],
+            'nilai_pertanggungan' => [
+                'integer',
+                'nullable',
+            ],
+            'jenis_pertanggungan_id' => [
+                'required',
+                'nullable',
+            ],
+            'perluasan_pertanggungan_id' => [
+                'required',
+                'nullable',
+            ],
+            'assigned_to_user_id' => [
+                'integer',
+            ],
+             'assigned_to_customer_id' => [
+                'integer',
+            ],
         ];
     }
 }

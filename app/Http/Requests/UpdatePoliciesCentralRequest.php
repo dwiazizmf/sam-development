@@ -59,6 +59,24 @@ class UpdatePoliciesCentralRequest extends FormRequest
             'external_polis_doc' => [
                 'array',
             ],
+             'assigned_to_user_id' => [
+                'integer',
+            ],
+             'assigned_to_customer_id' => [
+                'integer',
+            ],
+            'aksessoris_tambahan' => [
+                'string',
+                'nullable',
+            ],
+            'aksesoris_harga' => [
+                'integer',
+                'nullable',
+            ],
+            'biaya_lainnya' => [
+                'integer',
+                'nullable',
+            ]
         ];
     }
 

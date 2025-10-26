@@ -94,22 +94,6 @@
                 <span class="help-block">{{ trans('cruds.policiesCentral.fields.discount_total_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="aksessoris_tambahan">{{ trans('cruds.policiesCentral.fields.aksessoris_tambahan') }}</label>
-                <input class="form-control {{ $errors->has('aksessoris_tambahan') ? 'is-invalid' : '' }}" type="number" name="aksessoris_tambahan" id="aksessoris_tambahan" value="{{ old('aksessoris_tambahan', $policiesCentral->aksessoris_tambahan) }}" step="0.01">
-                @if($errors->has('aksessoris_tambahan'))
-                    <span class="text-danger">{{ $errors->first('aksessoris_tambahan') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.policiesCentral.fields.aksessoris_tambahan_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="aksesoris_harga">{{ trans('cruds.policiesCentral.fields.aksesoris_harga') }}</label>
-                <input class="form-control {{ $errors->has('aksesoris_harga') ? 'is-invalid' : '' }}" type="number" name="aksesoris_harga" id="aksesoris_harga" value="{{ old('aksesoris_harga', $policiesCentral->aksesoris_harga) }}" step="0.01">
-                @if($errors->has('aksesoris_harga'))
-                    <span class="text-danger">{{ $errors->first('aksesoris_harga') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.policiesCentral.fields.aksesoris_harga_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <label for="biaya_lainnya">{{ trans('cruds.policiesCentral.fields.biaya_lainnya') }}</label>
                 <input class="form-control {{ $errors->has('biaya_lainnya') ? 'is-invalid' : '' }}" type="number" name="biaya_lainnya" id="biaya_lainnya" value="{{ old('biaya_lainnya', $policiesCentral->biaya_lainnya) }}" step="0.01">
                 @if($errors->has('biaya_lainnya'))
@@ -242,7 +226,6 @@
     </div>
 </div>
 </form>
-
 
 @endsection
 

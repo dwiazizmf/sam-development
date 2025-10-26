@@ -92,7 +92,7 @@
             </div>
             <div class="form-group">
                 <label for="aksessoris_tambahan">{{ trans('cruds.policiesCentral.fields.aksessoris_tambahan') }}</label>
-                <input class="form-control {{ $errors->has('aksessoris_tambahan') ? 'is-invalid' : '' }}" type="number" name="aksessoris_tambahan" id="aksessoris_tambahan" value="{{ old('aksessoris_tambahan', $policiesCentral->aksessoris_tambahan) }}" step="0.01">
+                <input class="form-control {{ $errors->has('aksessoris_tambahan') ? 'is-invalid' : '' }}" type="text" name="aksessoris_tambahan" id="aksessoris_tambahan" value="{{ old('aksessoris_tambahan', $policiesCentral->aksessoris_tambahan) }}">
                 @if($errors->has('aksessoris_tambahan'))
                     <span class="text-danger">{{ $errors->first('aksessoris_tambahan') }}</span>
                 @endif

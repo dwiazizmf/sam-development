@@ -37,7 +37,7 @@ class HomeController
             'filter_period'      => 'year',
             'column_class'       => 'col-md-12',
             'entries_number'     => '5',
-            'relationship_name'  => 'user_marketing',
+            'relationship_name'  => 'assigned_to_user',
             'translation_key'    => 'policiesCentral',
         ];
 

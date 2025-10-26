@@ -69,7 +69,7 @@
         </div>
         <div class="form-group">
             <label class="required" for="premium_amount">{{ trans('cruds.policiesCentral.fields.premium_amount') }}</label>
-            <input class="form-control {{ $errors->has('premium_amount') ? 'is-invalid' : '' }}" type="number" name="premium_amount" id="premium_amount" value="{{ old('premium_amount', '') }}" step="0.01" required>
+            <input class="form-control {{ $errors->has('premium_amount') ? 'is-invalid' : '' }}" type="number" name="premium_amount" id="premium_amount" value="{{ old('premium_amount', 0) }}" step="0.01" required>
             @if($errors->has('premium_amount'))
                 <span class="text-danger">{{ $errors->first('premium_amount') }}</span>
             @endif
@@ -77,7 +77,7 @@
         </div>
         <div class="form-group">
             <label for="discount">{{ trans('cruds.policiesCentral.fields.discount') }}</label>
-            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}" type="number" name="discount" id="discount" value="{{ old('discount', '') }}" step="0.01">
+            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}" type="number" name="discount" id="discount" value="{{ old('discount', 0) }}" step="0.01">
             @if($errors->has('discount'))
                 <span class="text-danger">{{ $errors->first('discount') }}</span>
             @endif
@@ -85,7 +85,7 @@
         </div>
         <div class="form-group">
             <label for="discount_total">{{ trans('cruds.policiesCentral.fields.discount_total') }}</label>
-            <input class="form-control {{ $errors->has('discount_total') ? 'is-invalid' : '' }}" type="number" name="discount_total" id="discount_total" value="{{ old('discount_total', '') }}" step="0.01">
+            <input class="form-control {{ $errors->has('discount_total') ? 'is-invalid' : '' }}" type="number" name="discount_total" id="discount_total" value="{{ old('discount_total', 0) }}" step="0.01">
             @if($errors->has('discount_total'))
                 <span class="text-danger">{{ $errors->first('discount_total') }}</span>
             @endif
@@ -93,7 +93,7 @@
         </div>
         <div class="form-group">
             <label for="biaya_lainnya">{{ trans('cruds.policiesCentral.fields.biaya_lainnya') }}</label>
-            <input class="form-control {{ $errors->has('biaya_lainnya') ? 'is-invalid' : '' }}" type="number" name="biaya_lainnya" id="biaya_lainnya" value="{{ old('biaya_lainnya', '') }}" step="0.01">
+            <input class="form-control {{ $errors->has('biaya_lainnya') ? 'is-invalid' : '' }}" type="number" name="biaya_lainnya" id="biaya_lainnya" value="{{ old('biaya_lainnya', 0) }}" step="0.01">
             @if($errors->has('biaya_lainnya'))
                 <span class="text-danger">{{ $errors->first('biaya_lainnya') }}</span>
             @endif
@@ -101,7 +101,7 @@
         </div>
         <div class="form-group">
             <label class="required" for="sum_insured">{{ trans('cruds.policiesCentral.fields.sum_insured') }}</label>
-            <input class="form-control {{ $errors->has('sum_insured') ? 'is-invalid' : '' }}" type="number" name="sum_insured" id="sum_insured" value="{{ old('sum_insured', '') }}" step="0.01" required>
+            <input class="form-control {{ $errors->has('sum_insured') ? 'is-invalid' : '' }}" type="number" name="sum_insured" id="sum_insured" value="{{ old('sum_insured', 0) }}" step="0.01" required>
             @if($errors->has('sum_insured'))
                 <span class="text-danger">{{ $errors->first('sum_insured') }}</span>
             @endif

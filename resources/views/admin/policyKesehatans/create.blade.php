@@ -70,7 +70,7 @@
         </div>
         <div class="form-group">
             <label class="required" for="premium_amount">{{ trans('cruds.policiesCentral.fields.premium_amount') }}</label>
-            <input class="form-control {{ $errors->has('premium_amount') ? 'is-invalid' : '' }}" type="number" name="premium_amount" id="premium_amount" value="{{ old('premium_amount', '') }}" step="0.01" required>
+            <input class="form-control {{ $errors->has('premium_amount') ? 'is-invalid' : '' }}" type="number" name="premium_amount" id="premium_amount" value="{{ old('premium_amount', 0) }}" step="0.01" required>
             @if($errors->has('premium_amount'))
                 <span class="text-danger">{{ $errors->first('premium_amount') }}</span>
             @endif
@@ -78,7 +78,7 @@
         </div>
         <div class="form-group">
             <label for="discount">{{ trans('cruds.policiesCentral.fields.discount') }}</label>
-            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}" type="number" name="discount" id="discount" value="{{ old('discount', '') }}" step="0.01">
+            <input class="form-control {{ $errors->has('discount') ? 'is-invalid' : '' }}" type="number" name="discount" id="discount" value="{{ old('discount', 0) }}" step="0.01">
             @if($errors->has('discount'))
                 <span class="text-danger">{{ $errors->first('discount') }}</span>
             @endif
@@ -86,31 +86,15 @@
         </div>
         <div class="form-group">
             <label for="discount_total">{{ trans('cruds.policiesCentral.fields.discount_total') }}</label>
-            <input class="form-control {{ $errors->has('discount_total') ? 'is-invalid' : '' }}" type="number" name="discount_total" id="discount_total" value="{{ old('discount_total', '') }}" step="0.01">
+            <input class="form-control {{ $errors->has('discount_total') ? 'is-invalid' : '' }}" type="number" name="discount_total" id="discount_total" value="{{ old('discount_total', 0) }}" step="0.01">
             @if($errors->has('discount_total'))
                 <span class="text-danger">{{ $errors->first('discount_total') }}</span>
             @endif
             <span class="help-block">{{ trans('cruds.policiesCentral.fields.discount_total_helper') }}</span>
         </div>
         <div class="form-group">
-            <label for="aksessoris_tambahan">{{ trans('cruds.policiesCentral.fields.aksessoris_tambahan') }}</label>
-            <input class="form-control {{ $errors->has('aksessoris_tambahan') ? 'is-invalid' : '' }}" type="number" name="aksessoris_tambahan" id="aksessoris_tambahan" value="{{ old('aksessoris_tambahan', '') }}" step="0.01">
-            @if($errors->has('aksessoris_tambahan'))
-                <span class="text-danger">{{ $errors->first('aksessoris_tambahan') }}</span>
-            @endif
-            <span class="help-block">{{ trans('cruds.policiesCentral.fields.aksessoris_tambahan_helper') }}</span>
-        </div>
-        <div class="form-group">
-            <label for="aksesoris_harga">{{ trans('cruds.policiesCentral.fields.aksesoris_harga') }}</label>
-            <input class="form-control {{ $errors->has('aksesoris_harga') ? 'is-invalid' : '' }}" type="number" name="aksesoris_harga" id="aksesoris_harga" value="{{ old('aksesoris_harga', '') }}" step="0.01">
-            @if($errors->has('aksesoris_harga'))
-                <span class="text-danger">{{ $errors->first('aksesoris_harga') }}</span>
-            @endif
-            <span class="help-block">{{ trans('cruds.policiesCentral.fields.aksesoris_harga_helper') }}</span>
-        </div>
-        <div class="form-group">
             <label for="biaya_lainnya">{{ trans('cruds.policiesCentral.fields.biaya_lainnya') }}</label>
-            <input class="form-control {{ $errors->has('biaya_lainnya') ? 'is-invalid' : '' }}" type="number" name="biaya_lainnya" id="biaya_lainnya" value="{{ old('biaya_lainnya', '') }}" step="0.01">
+            <input class="form-control {{ $errors->has('biaya_lainnya') ? 'is-invalid' : '' }}" type="number" name="biaya_lainnya" id="biaya_lainnya" value="{{ old('biaya_lainnya', 0) }}" step="0.01">
             @if($errors->has('biaya_lainnya'))
                 <span class="text-danger">{{ $errors->first('biaya_lainnya') }}</span>
             @endif
@@ -118,7 +102,7 @@
         </div>
         <div class="form-group">
             <label class="required" for="sum_insured">{{ trans('cruds.policiesCentral.fields.sum_insured') }}</label>
-            <input class="form-control {{ $errors->has('sum_insured') ? 'is-invalid' : '' }}" type="number" name="sum_insured" id="sum_insured" value="{{ old('sum_insured', '') }}" step="0.01" required>
+            <input class="form-control {{ $errors->has('sum_insured') ? 'is-invalid' : '' }}" type="number" name="sum_insured" id="sum_insured" value="{{ old('sum_insured', 0) }}" step="0.01" required>
             @if($errors->has('sum_insured'))
                 <span class="text-danger">{{ $errors->first('sum_insured') }}</span>
             @endif
@@ -256,61 +240,61 @@
 @section('scripts')
 <script>
     var uploadedUploadDokumenMap = {}
-Dropzone.options.uploadDokumenDropzone = {
-    url: '{{ route('admin.policy-kesehatans.storeMedia') }}',
-    maxFilesize: 2, // MB
-    addRemoveLinks: true,
-    headers: {
-      'X-CSRF-TOKEN': "{{ csrf_token() }}"
-    },
-    params: {
-      size: 2
-    },
-    success: function (file, response) {
-      $('form').append('<input type="hidden" name="upload_dokumen[]" value="' + response.name + '">')
-      uploadedUploadDokumenMap[file.name] = response.name
-    },
-    removedfile: function (file) {
-      file.previewElement.remove()
-      var name = ''
-      if (typeof file.file_name !== 'undefined') {
-        name = file.file_name
-      } else {
-        name = uploadedUploadDokumenMap[file.name]
-      }
-      $('form').find('input[name="upload_dokumen[]"][value="' + name + '"]').remove()
-    },
-    init: function () {
-@if(isset($policyKesehatan) && $policyKesehatan->upload_dokumen)
-          var files =
-            {!! json_encode($policyKesehatan->upload_dokumen) !!}
-              for (var i in files) {
-              var file = files[i]
-              this.options.addedfile.call(this, file)
-              file.previewElement.classList.add('dz-complete')
-              $('form').append('<input type="hidden" name="upload_dokumen[]" value="' + file.file_name + '">')
+    Dropzone.options.uploadDokumenDropzone = {
+        url: '{{ route('admin.policy-kesehatans.storeMedia') }}',
+        maxFilesize: 2, // MB
+        addRemoveLinks: true,
+        headers: {
+        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        },
+        params: {
+        size: 2
+        },
+        success: function (file, response) {
+        $('form').append('<input type="hidden" name="upload_dokumen[]" value="' + response.name + '">')
+        uploadedUploadDokumenMap[file.name] = response.name
+        },
+        removedfile: function (file) {
+        file.previewElement.remove()
+        var name = ''
+        if (typeof file.file_name !== 'undefined') {
+            name = file.file_name
+        } else {
+            name = uploadedUploadDokumenMap[file.name]
+        }
+        $('form').find('input[name="upload_dokumen[]"][value="' + name + '"]').remove()
+        },
+        init: function () {
+    @if(isset($policyKesehatan) && $policyKesehatan->upload_dokumen)
+            var files =
+                {!! json_encode($policyKesehatan->upload_dokumen) !!}
+                for (var i in files) {
+                var file = files[i]
+                this.options.addedfile.call(this, file)
+                file.previewElement.classList.add('dz-complete')
+                $('form').append('<input type="hidden" name="upload_dokumen[]" value="' + file.file_name + '">')
+                }
+    @endif
+        },
+        error: function (file, response) {
+            if ($.type(response) === 'string') {
+                var message = response //dropzone sends it's own error messages in string
+            } else {
+                var message = response.errors.file
             }
-@endif
-    },
-     error: function (file, response) {
-         if ($.type(response) === 'string') {
-             var message = response //dropzone sends it's own error messages in string
-         } else {
-             var message = response.errors.file
-         }
-         file.previewElement.classList.add('dz-error')
-         _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
-         _results = []
-         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-             node = _ref[_i]
-             _results.push(node.textContent = message)
-         }
+            file.previewElement.classList.add('dz-error')
+            _ref = file.previewElement.querySelectorAll('[data-dz-errormessage]')
+            _results = []
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                node = _ref[_i]
+                _results.push(node.textContent = message)
+            }
 
-         return _results
-     }
-}
+            return _results
+        }
+    }
 
-var uploadedExternalPolisDocMap = {}
+    var uploadedExternalPolisDocMap = {}
     Dropzone.options.externalPolisDocDropzone = {
         url: '{{ route('admin.policies-centrals.storeMedia') }}',
         maxFilesize: 2, // MB

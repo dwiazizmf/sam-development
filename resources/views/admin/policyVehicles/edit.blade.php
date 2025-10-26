@@ -10,9 +10,6 @@
     </div>
 
     <div class="card-body">
-        <form method="POST" action="{{ route("admin.policies-centrals.update", [$policiesCentral->id]) }}" enctype="multipart/form-data">
-            @method('PUT')
-            @csrf
             <div class="form-group">
                 <label for="assigned_to_customer_id">{{ trans('cruds.policiesCentral.fields.assigned_to_customer') }}</label>
                 <select class="form-control select2 {{ $errors->has('assigned_to_customer') ? 'is-invalid' : '' }}" name="assigned_to_customer_id" id="assigned_to_customer_id">
@@ -95,7 +92,7 @@
             </div>
             <div class="form-group">
                 <label for="aksessoris_tambahan">{{ trans('cruds.policiesCentral.fields.aksessoris_tambahan') }}</label>
-                <input class="form-control {{ $errors->has('aksessoris_tambahan') ? 'is-invalid' : '' }}" type="number" name="aksessoris_tambahan" id="aksessoris_tambahan" value="{{ old('aksessoris_tambahan', $policiesCentral->aksessoris_tambahan) }}" step="0.01">
+                <input class="form-control {{ $errors->has('aksessoris_tambahan') ? 'is-invalid' : '' }}" type="text" name="aksessoris_tambahan" id="aksessoris_tambahan" value="{{ old('aksessoris_tambahan', $policiesCentral->aksessoris_tambahan) }}">
                 @if($errors->has('aksessoris_tambahan'))
                     <span class="text-danger">{{ $errors->first('aksessoris_tambahan') }}</span>
                 @endif
