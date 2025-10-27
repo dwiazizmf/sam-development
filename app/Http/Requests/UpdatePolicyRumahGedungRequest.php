@@ -35,6 +35,7 @@ class UpdatePolicyRumahGedungRequest extends FormRequest
             'alamat_tertanggung' => [
                 'string',
                 'nullable',
+                'max:255',
             ],
             'no_phone' => [
                 'string',
@@ -54,6 +55,7 @@ class UpdatePolicyRumahGedungRequest extends FormRequest
             'keterangan' => [
                 'string',
                 'nullable',
+                'max:255',
             ],
             'assigned_to_user_id' => [
                 'integer',

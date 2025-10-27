@@ -39,6 +39,7 @@ class UpdatePoliciesCentralRequest extends FormRequest
                 'date_format:' . config('panel.date_format'),
             ],
             'premium_amount' => [
+                'numeric|decimal:0,2',
                 'required',
             ],
             'discount' => [
@@ -48,6 +49,7 @@ class UpdatePoliciesCentralRequest extends FormRequest
                 'numeric',
             ],
             'sum_insured' => [
+                'numeric|decimal:0,2',
                 'required',
             ],
             'policy_status' => [
@@ -70,11 +72,11 @@ class UpdatePoliciesCentralRequest extends FormRequest
                 'nullable',
             ],
             'aksesoris_harga' => [
-                'integer',
+                'numeric|decimal:0,2',
                 'nullable',
             ],
             'biaya_lainnya' => [
-                'integer',
+                'numeric|decimal:0,2',
                 'nullable',
             ]
         ];

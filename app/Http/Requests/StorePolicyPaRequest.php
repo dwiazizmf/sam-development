@@ -31,6 +31,7 @@ class StorePolicyPaRequest extends FormRequest
             'alamat_tertanggung' => [
                 'string',
                 'nullable',
+                'max:255',
             ],
             'phone' => [
                 'string',

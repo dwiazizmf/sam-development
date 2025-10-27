@@ -64,6 +64,7 @@ class UpdatePolicyVehicleRequest extends FormRequest
             'alamat_tertanggung' => [
                 'string',
                 'nullable',
+                'max:255',
             ],
             'email' => [
                 'nullable', 
