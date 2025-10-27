@@ -84,9 +84,9 @@ class UpdatePolicyVehicleRequest extends FormRequest
                 'required',
                 'nullable',
             ],
-            'assigned_to_user_id' => [
-                'integer',
-            ],
+            // 'assigned_to_user_id' => [
+            //     'integer',
+            // ],
              'assigned_to_customer_id' => [
                 'integer',
             ],

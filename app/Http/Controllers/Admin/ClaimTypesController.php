@@ -54,9 +54,15 @@ class ClaimTypesController extends Controller
             $table->editColumn('claim_gorup.claim_group_name', function ($row) {
                 return $row->claim_gorup ? (is_string($row->claim_gorup) ? $row->claim_gorup : $row->claim_gorup->claim_group_name) : '';
             });
+
             $table->editColumn('claim_type_code', function ($row) {
-                return $row->claim_type_code ? $row->claim_type_code : '';
+                return $row->claim_type_code ? ClaimType::CLAIM_COVERAGE[$row->claim_type_code] : '';
             });
+            
+            // $table->editColumn('claim_type_code', function ($row) {
+            //     return $row->claim_type_code ? $row->claim_type_code : '';
+            // });
+            
             $table->editColumn('claim_type_name', function ($row) {
                 return $row->claim_type_name ? $row->claim_type_name : '';
             });

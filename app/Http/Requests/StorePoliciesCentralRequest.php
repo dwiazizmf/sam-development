@@ -59,9 +59,9 @@ class StorePoliciesCentralRequest extends FormRequest
             'external_polis_doc' => [
                 'array',
             ],
-            'assigned_to_user_id' => [
-                'integer',
-            ],
+            // 'assigned_to_user_id' => [
+            //     'integer',
+            // ],
              'assigned_to_customer_id' => [
                 'integer',
             ],

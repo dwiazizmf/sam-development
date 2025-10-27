@@ -57,10 +57,10 @@ class UpdatePolicyRumahGedungRequest extends FormRequest
                 'nullable',
                 'max:255',
             ],
-            'assigned_to_user_id' => [
-                'integer',
-            ],
-             'assigned_to_customer_id' => [
+            // 'assigned_to_user_id' => [
+            //     'integer',
+            // ],
+            'assigned_to_customer_id' => [
                 'integer',
             ],
             'insurance_product_id' => [

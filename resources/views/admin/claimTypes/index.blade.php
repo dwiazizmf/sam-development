@@ -35,7 +35,7 @@
                         {{ trans('cruds.claimTypeGroup.fields.claim_group_name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.claimType.fields.claim_type_code') }}
+                        {{ trans('Coverage Claim') }}
                     </th>
                     <th>
                         {{ trans('cruds.claimType.fields.claim_type_name') }}

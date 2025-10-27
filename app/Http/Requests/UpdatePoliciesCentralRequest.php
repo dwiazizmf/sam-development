@@ -39,7 +39,7 @@ class UpdatePoliciesCentralRequest extends FormRequest
                 'date_format:' . config('panel.date_format'),
             ],
             'premium_amount' => [
-                'numeric|decimal:0,2',
+                'numeric',
                 'required',
             ],
             'discount' => [
@@ -49,7 +49,7 @@ class UpdatePoliciesCentralRequest extends FormRequest
                 'numeric',
             ],
             'sum_insured' => [
-                'numeric|decimal:0,2',
+                'numeric',
                 'required',
             ],
             'policy_status' => [
@@ -61,10 +61,11 @@ class UpdatePoliciesCentralRequest extends FormRequest
             'external_polis_doc' => [
                 'array',
             ],
-             'assigned_to_user_id' => [
-                'integer',
-            ],
-             'assigned_to_customer_id' => [
+            // 'assigned_to_user_id' => [
+            //     'integer',
+            //     'nullable',
+            // ],
+            'assigned_to_customer_id' => [
                 'integer',
             ],
             'aksessoris_tambahan' => [
@@ -72,11 +73,11 @@ class UpdatePoliciesCentralRequest extends FormRequest
                 'nullable',
             ],
             'aksesoris_harga' => [
-                'numeric|decimal:0,2',
+                'numeric',
                 'nullable',
             ],
             'biaya_lainnya' => [
-                'numeric|decimal:0,2',
+                'numeric',
                 'nullable',
             ]
         ];
