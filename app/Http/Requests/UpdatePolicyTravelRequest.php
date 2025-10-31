@@ -18,6 +18,7 @@ class UpdatePolicyTravelRequest extends FormRequest
     {
         return [
             'id_policies_id' => [
+                'required',
                 'integer',
             ],
             'polis_name' => [
@@ -47,16 +48,6 @@ class UpdatePolicyTravelRequest extends FormRequest
             ],
             'upload' => [
                 'array',
-            ],
-            // 'assigned_to_user_id' => [
-            //     'integer',
-            // ],
-            'assigned_to_customer_id' => [
-                'integer',
-            ],
-            'insurance_product_id' => [
-                'required',
-                'integer',
             ],
         ];
     }

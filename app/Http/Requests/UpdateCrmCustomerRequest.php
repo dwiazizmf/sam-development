@@ -17,6 +17,10 @@ class UpdateCrmCustomerRequest extends FormRequest
     public function rules()
     {
         return [
+            'company_id' => [
+                'required',
+                'integer',
+            ],
             'first_name' => [
                 'string',
                 'required',
@@ -27,10 +31,6 @@ class UpdateCrmCustomerRequest extends FormRequest
                 'unique:crm_customers,email,' . request()->route('crm_customer')->id,
             ],
             'address' => [
-                'string',
-                'nullable',
-            ],
-            'website' => [
                 'string',
                 'nullable',
             ],
@@ -50,14 +50,6 @@ class UpdateCrmCustomerRequest extends FormRequest
                 'nullable',
             ],
             'no_rekening_pic' => [
-                'string',
-                'nullable',
-            ],
-            'nama_bank_companies' => [
-                'string',
-                'nullable',
-            ],
-            'no_rekening_companies' => [
                 'string',
                 'nullable',
             ],

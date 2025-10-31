@@ -57,6 +57,9 @@ class ContactCompanyController extends Controller
             $table->editColumn('no_telp', function ($row) {
                 return $row->no_telp ? $row->no_telp : '';
             });
+            $table->editColumn('website', function ($row) {
+                return $row->website ? $row->website : '';
+            });
             $table->editColumn('company_email', function ($row) {
                 return $row->company_email ? $row->company_email : '';
             });
@@ -71,6 +74,12 @@ class ContactCompanyController extends Controller
             });
             $table->editColumn('company_website', function ($row) {
                 return $row->company_website ? $row->company_website : '';
+            });
+            $table->editColumn('nama_bank_companies', function ($row) {
+                return $row->nama_bank_companies ? $row->nama_bank_companies : '';
+            });
+            $table->editColumn('no_rekening_companies', function ($row) {
+                return $row->no_rekening_companies ? $row->no_rekening_companies : '';
             });
 
             $table->rawColumns(['actions', 'placeholder', 'business_type']);

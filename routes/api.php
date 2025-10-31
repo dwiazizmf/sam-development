@@ -47,7 +47,7 @@ Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', '
 
     // Policies Central
     Route::post('policies-centrals/media', 'PoliciesCentralApiController@storeMedia')->name('policies-centrals.storeMedia');
-    Route::apiResource('policies-centrals', 'PoliciesCentralApiController');
+    Route::apiResource('policies-centrals', 'PoliciesCentralApiController', ['except' => ['store', 'update', 'destroy']]);
 
     // Policy Travel
     Route::post('policy-travels/media', 'PolicyTravelApiController@storeMedia')->name('policy-travels.storeMedia');

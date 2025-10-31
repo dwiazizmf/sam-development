@@ -146,12 +146,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('marketing-targers', 'MarketingTargerController');
 
     // Policies Central
-    Route::delete('policies-centrals/destroy', 'PoliciesCentralController@massDestroy')->name('policies-centrals.massDestroy');
     Route::post('policies-centrals/media', 'PoliciesCentralController@storeMedia')->name('policies-centrals.storeMedia');
     Route::post('policies-centrals/ckmedia', 'PoliciesCentralController@storeCKEditorImages')->name('policies-centrals.storeCKEditorImages');
-    Route::post('policies-centrals/parse-csv-import', 'PoliciesCentralController@parseCsvImport')->name('policies-centrals.parseCsvImport');
-    Route::post('policies-centrals/process-csv-import', 'PoliciesCentralController@processCsvImport')->name('policies-centrals.processCsvImport');
-    Route::resource('policies-centrals', 'PoliciesCentralController');
+    Route::resource('policies-centrals', 'PoliciesCentralController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
     // Policy Travel
     Route::delete('policy-travels/destroy', 'PolicyTravelController@massDestroy')->name('policy-travels.massDestroy');

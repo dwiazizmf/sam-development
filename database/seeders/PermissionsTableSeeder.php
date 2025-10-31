@@ -480,322 +480,310 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 118,
-                'title' => 'policies_central_create',
-            ],
-            [
-                'id'    => 119,
-                'title' => 'policies_central_edit',
-            ],
-            [
-                'id'    => 120,
                 'title' => 'policies_central_show',
             ],
             [
-                'id'    => 121,
-                'title' => 'policies_central_delete',
-            ],
-            [
-                'id'    => 122,
+                'id'    => 119,
                 'title' => 'policies_central_access',
             ],
             [
-                'id'    => 123,
+                'id'    => 120,
                 'title' => 'policy_travel_create',
             ],
             [
-                'id'    => 124,
+                'id'    => 121,
                 'title' => 'policy_travel_edit',
             ],
             [
-                'id'    => 125,
+                'id'    => 122,
                 'title' => 'policy_travel_show',
             ],
             [
-                'id'    => 126,
+                'id'    => 123,
                 'title' => 'policy_travel_delete',
             ],
             [
-                'id'    => 127,
+                'id'    => 124,
                 'title' => 'policy_travel_access',
             ],
             [
-                'id'    => 128,
+                'id'    => 125,
                 'title' => 'perluasan_pertanggungan_create',
             ],
             [
-                'id'    => 129,
+                'id'    => 126,
                 'title' => 'perluasan_pertanggungan_edit',
             ],
             [
-                'id'    => 130,
+                'id'    => 127,
                 'title' => 'perluasan_pertanggungan_show',
             ],
             [
-                'id'    => 131,
+                'id'    => 128,
                 'title' => 'perluasan_pertanggungan_delete',
             ],
             [
-                'id'    => 132,
+                'id'    => 129,
                 'title' => 'perluasan_pertanggungan_access',
             ],
             [
-                'id'    => 133,
+                'id'    => 130,
                 'title' => 'jenis_pertanggungan_create',
             ],
             [
-                'id'    => 134,
+                'id'    => 131,
                 'title' => 'jenis_pertanggungan_edit',
             ],
             [
-                'id'    => 135,
+                'id'    => 132,
                 'title' => 'jenis_pertanggungan_show',
             ],
             [
-                'id'    => 136,
+                'id'    => 133,
                 'title' => 'jenis_pertanggungan_delete',
             ],
             [
-                'id'    => 137,
+                'id'    => 134,
                 'title' => 'jenis_pertanggungan_access',
             ],
             [
-                'id'    => 138,
+                'id'    => 135,
                 'title' => 'policy_vehicle_create',
             ],
             [
-                'id'    => 139,
+                'id'    => 136,
                 'title' => 'policy_vehicle_edit',
             ],
             [
-                'id'    => 140,
+                'id'    => 137,
                 'title' => 'policy_vehicle_show',
             ],
             [
-                'id'    => 141,
+                'id'    => 138,
                 'title' => 'policy_vehicle_delete',
             ],
             [
-                'id'    => 142,
+                'id'    => 139,
                 'title' => 'policy_vehicle_access',
             ],
             [
-                'id'    => 143,
+                'id'    => 140,
                 'title' => 'policy_pa_create',
             ],
             [
-                'id'    => 144,
+                'id'    => 141,
                 'title' => 'policy_pa_edit',
             ],
             [
-                'id'    => 145,
+                'id'    => 142,
                 'title' => 'policy_pa_show',
             ],
             [
-                'id'    => 146,
+                'id'    => 143,
                 'title' => 'policy_pa_delete',
             ],
             [
-                'id'    => 147,
+                'id'    => 144,
                 'title' => 'policy_pa_access',
             ],
             [
-                'id'    => 148,
+                'id'    => 145,
                 'title' => 'jenis_rumah_gedung_create',
             ],
             [
-                'id'    => 149,
+                'id'    => 146,
                 'title' => 'jenis_rumah_gedung_edit',
             ],
             [
-                'id'    => 150,
+                'id'    => 147,
                 'title' => 'jenis_rumah_gedung_show',
             ],
             [
-                'id'    => 151,
+                'id'    => 148,
                 'title' => 'jenis_rumah_gedung_delete',
             ],
             [
-                'id'    => 152,
+                'id'    => 149,
                 'title' => 'jenis_rumah_gedung_access',
             ],
             [
-                'id'    => 153,
+                'id'    => 150,
                 'title' => 'jenis_paket_create',
             ],
             [
-                'id'    => 154,
+                'id'    => 151,
                 'title' => 'jenis_paket_edit',
             ],
             [
-                'id'    => 155,
+                'id'    => 152,
                 'title' => 'jenis_paket_show',
             ],
             [
-                'id'    => 156,
+                'id'    => 153,
                 'title' => 'jenis_paket_delete',
             ],
             [
-                'id'    => 157,
+                'id'    => 154,
                 'title' => 'jenis_paket_access',
             ],
             [
-                'id'    => 158,
+                'id'    => 155,
                 'title' => 'policy_rumah_gedung_create',
             ],
             [
-                'id'    => 159,
+                'id'    => 156,
                 'title' => 'policy_rumah_gedung_edit',
             ],
             [
-                'id'    => 160,
+                'id'    => 157,
                 'title' => 'policy_rumah_gedung_show',
             ],
             [
-                'id'    => 161,
+                'id'    => 158,
                 'title' => 'policy_rumah_gedung_delete',
             ],
             [
-                'id'    => 162,
+                'id'    => 159,
                 'title' => 'policy_rumah_gedung_access',
             ],
             [
-                'id'    => 163,
+                'id'    => 160,
                 'title' => 'policy_kesehatan_create',
             ],
             [
-                'id'    => 164,
+                'id'    => 161,
                 'title' => 'policy_kesehatan_edit',
             ],
             [
-                'id'    => 165,
+                'id'    => 162,
                 'title' => 'policy_kesehatan_show',
             ],
             [
-                'id'    => 166,
+                'id'    => 163,
                 'title' => 'policy_kesehatan_delete',
             ],
             [
-                'id'    => 167,
+                'id'    => 164,
                 'title' => 'policy_kesehatan_access',
             ],
             [
-                'id'    => 168,
+                'id'    => 165,
                 'title' => 'task_history_show',
             ],
             [
-                'id'    => 169,
+                'id'    => 166,
                 'title' => 'task_history_access',
             ],
             [
-                'id'    => 170,
+                'id'    => 167,
                 'title' => 'business_type_create',
             ],
             [
-                'id'    => 171,
+                'id'    => 168,
                 'title' => 'business_type_edit',
             ],
             [
-                'id'    => 172,
+                'id'    => 169,
                 'title' => 'business_type_show',
             ],
             [
-                'id'    => 173,
+                'id'    => 170,
                 'title' => 'business_type_delete',
             ],
             [
-                'id'    => 174,
+                'id'    => 171,
                 'title' => 'business_type_access',
             ],
             [
-                'id'    => 175,
+                'id'    => 172,
                 'title' => 'status_prospect_create',
             ],
             [
-                'id'    => 176,
+                'id'    => 173,
                 'title' => 'status_prospect_edit',
             ],
             [
-                'id'    => 177,
+                'id'    => 174,
                 'title' => 'status_prospect_show',
             ],
             [
-                'id'    => 178,
+                'id'    => 175,
                 'title' => 'status_prospect_delete',
             ],
             [
-                'id'    => 179,
+                'id'    => 176,
                 'title' => 'status_prospect_access',
             ],
             [
-                'id'    => 180,
+                'id'    => 177,
                 'title' => 'user_alert_create',
             ],
             [
-                'id'    => 181,
+                'id'    => 178,
                 'title' => 'user_alert_show',
             ],
             [
-                'id'    => 182,
+                'id'    => 179,
                 'title' => 'user_alert_delete',
             ],
             [
-                'id'    => 183,
+                'id'    => 180,
                 'title' => 'user_alert_access',
             ],
             [
-                'id'    => 184,
+                'id'    => 181,
                 'title' => 'invoice_create',
             ],
             [
-                'id'    => 185,
+                'id'    => 182,
                 'title' => 'invoice_edit',
             ],
             [
-                'id'    => 186,
+                'id'    => 183,
                 'title' => 'invoice_show',
             ],
             [
-                'id'    => 187,
+                'id'    => 184,
                 'title' => 'invoice_delete',
             ],
             [
-                'id'    => 188,
+                'id'    => 185,
                 'title' => 'invoice_access',
             ],
             [
-                'id'    => 189,
+                'id'    => 186,
                 'title' => 'comission_show',
             ],
             [
-                'id'    => 190,
+                'id'    => 187,
                 'title' => 'comission_access',
             ],
             [
-                'id'    => 191,
+                'id'    => 188,
                 'title' => 'policy_motor_create',
             ],
             [
-                'id'    => 192,
+                'id'    => 189,
                 'title' => 'policy_motor_edit',
             ],
             [
-                'id'    => 193,
+                'id'    => 190,
                 'title' => 'policy_motor_show',
             ],
             [
-                'id'    => 194,
+                'id'    => 191,
                 'title' => 'policy_motor_delete',
             ],
             [
-                'id'    => 195,
+                'id'    => 192,
                 'title' => 'policy_motor_access',
             ],
             [
-                'id'    => 196,
+                'id'    => 193,
                 'title' => 'master_access',
             ],
             [
-                'id'    => 197,
+                'id'    => 194,
                 'title' => 'profile_password_edit',
             ],
         ];

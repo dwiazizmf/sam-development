@@ -11,6 +11,18 @@
             @method('PUT')
             @csrf
             <div class="form-group">
+                <label class="required" for="company_id">{{ trans('cruds.crmCustomer.fields.company') }}</label>
+                <select class="form-control select2 {{ $errors->has('company') ? 'is-invalid' : '' }}" name="company_id" id="company_id" required>
+                    @foreach($companies as $id => $entry)
+                        <option value="{{ $id }}" {{ (old('company_id') ? old('company_id') : $crmCustomer->company->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('company'))
+                    <span class="text-danger">{{ $errors->first('company') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.crmCustomer.fields.company_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label class="required" for="first_name">{{ trans('cruds.crmCustomer.fields.first_name') }}</label>
                 <input class="form-control {{ $errors->has('first_name') ? 'is-invalid' : '' }}" type="text" name="first_name" id="first_name" value="{{ old('first_name', $crmCustomer->first_name) }}" required>
                 @if($errors->has('first_name'))
@@ -55,14 +67,6 @@
                 <span class="help-block">{{ trans('cruds.crmCustomer.fields.address_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="website">{{ trans('cruds.crmCustomer.fields.website') }}</label>
-                <input class="form-control {{ $errors->has('website') ? 'is-invalid' : '' }}" type="text" name="website" id="website" value="{{ old('website', $crmCustomer->website) }}">
-                @if($errors->has('website'))
-                    <span class="text-danger">{{ $errors->first('website') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.crmCustomer.fields.website_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <label for="commission">{{ trans('cruds.crmCustomer.fields.commission') }}</label>
                 <input class="form-control {{ $errors->has('commission') ? 'is-invalid' : '' }}" type="number" name="commission" id="commission" value="{{ old('commission', $crmCustomer->commission) }}" step="0.01">
                 @if($errors->has('commission'))
@@ -101,22 +105,6 @@
                     <span class="text-danger">{{ $errors->first('no_rekening_pic') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.crmCustomer.fields.no_rekening_pic_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="nama_bank_companies">{{ trans('cruds.crmCustomer.fields.nama_bank_companies') }}</label>
-                <input class="form-control {{ $errors->has('nama_bank_companies') ? 'is-invalid' : '' }}" type="text" name="nama_bank_companies" id="nama_bank_companies" value="{{ old('nama_bank_companies', $crmCustomer->nama_bank_companies) }}">
-                @if($errors->has('nama_bank_companies'))
-                    <span class="text-danger">{{ $errors->first('nama_bank_companies') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.crmCustomer.fields.nama_bank_companies_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="no_rekening_companies">{{ trans('cruds.crmCustomer.fields.no_rekening_companies') }}</label>
-                <input class="form-control {{ $errors->has('no_rekening_companies') ? 'is-invalid' : '' }}" type="text" name="no_rekening_companies" id="no_rekening_companies" value="{{ old('no_rekening_companies', $crmCustomer->no_rekening_companies) }}">
-                @if($errors->has('no_rekening_companies'))
-                    <span class="text-danger">{{ $errors->first('no_rekening_companies') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.crmCustomer.fields.no_rekening_companies_helper') }}</span>
             </div>
             <div class="form-group">
                 <label for="dokumen_legalitas">{{ trans('cruds.crmCustomer.fields.dokumen_legalitas') }}</label>

@@ -3,11 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
-use App\Http\Requests\MassDestroyPoliciesCentralRequest;
-use App\Http\Requests\StorePoliciesCentralRequest;
-use App\Http\Requests\UpdatePoliciesCentralRequest;
 use App\Models\ApiSyncLog;
 use App\Models\CrmCustomer;
 use App\Models\InsuranceProduct;
@@ -21,7 +17,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PoliciesCentralController extends Controller
 {
-    use MediaUploadingTrait, CsvImportTrait;
+    use MediaUploadingTrait;
 
     public function index(Request $request)
     {
@@ -36,10 +32,8 @@ class PoliciesCentralController extends Controller
 
             $table->editColumn('actions', function ($row) {
                 $viewGate      = 'policies_central_show';
-                //$editGate      = 'policies_central_edit';
-                $editGate      = false;
-                //$deleteGate    = 'policies_central_delete';
-                $deleteGate    = false;
+                $editGate      = 'policies_central_edit';
+                $deleteGate    = 'policies_central_delete';
                 $crudRoutePart = 'policies-centrals';
 
                 return view('partials.datatablesActions', compact(
@@ -131,74 +125,6 @@ class PoliciesCentralController extends Controller
         return view('admin.policiesCentrals.index', compact('crm_customers', 'insurance_products', 'users', 'api_sync_logs'));
     }
 
-    public function create()
-    {
-        abort_if(Gate::denies('policies_central_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $external_policies = ApiSyncLog::pluck('system_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.policiesCentrals.create', compact('assigned_to_customers', 'assigned_to_users', 'external_policies', 'insurance_products'));
-    }
-
-    public function store(StorePoliciesCentralRequest $request)
-    {
-        $policiesCentral = PoliciesCentral::create($request->all());
-
-        foreach ($request->input('external_polis_doc', []) as $file) {
-            $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-        }
-
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
-        }
-
-        return redirect()->route('admin.policies-centrals.index');
-    }
-
-    public function edit(PoliciesCentral $policiesCentral)
-    {
-        abort_if(Gate::denies('policies_central_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $external_policies = ApiSyncLog::pluck('system_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $policiesCentral->load('assigned_to_customer', 'insurance_product', 'assigned_to_user', 'external_policy', 'created_by');
-
-        return view('admin.policiesCentrals.edit', compact('assigned_to_customers', 'assigned_to_users', 'external_policies', 'insurance_products', 'policiesCentral'));
-    }
-
-    public function update(UpdatePoliciesCentralRequest $request, PoliciesCentral $policiesCentral)
-    {
-        $policiesCentral->update($request->all());
-
-        if (count($policiesCentral->external_polis_doc) > 0) {
-            foreach ($policiesCentral->external_polis_doc as $media) {
-                if (! in_array($media->file_name, $request->input('external_polis_doc', []))) {
-                    $media->delete();
-                }
-            }
-        }
-        $media = $policiesCentral->external_polis_doc->pluck('file_name')->toArray();
-        foreach ($request->input('external_polis_doc', []) as $file) {
-            if (count($media) === 0 || ! in_array($file, $media)) {
-                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-            }
-        }
-
-        return redirect()->route('admin.policies-centrals.index');
-    }
-
     public function show(PoliciesCentral $policiesCentral)
     {
         abort_if(Gate::denies('policies_central_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
@@ -206,26 +132,6 @@ class PoliciesCentralController extends Controller
         $policiesCentral->load('assigned_to_customer', 'insurance_product', 'assigned_to_user', 'external_policy', 'created_by', 'policiesClaims', 'idPoliciesPolicyKesehatans', 'idPoliciesPolicyTravels', 'polisInvoices', 'idPoliciesPolicyMotors', 'idPoliciesPolicyPas', 'idPoliciesPolicyVehicles', 'idPoliciesPolicyRumahGedungs');
 
         return view('admin.policiesCentrals.show', compact('policiesCentral'));
-    }
-
-    public function destroy(PoliciesCentral $policiesCentral)
-    {
-        abort_if(Gate::denies('policies_central_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $policiesCentral->delete();
-
-        return back();
-    }
-
-    public function massDestroy(MassDestroyPoliciesCentralRequest $request)
-    {
-        $policiesCentrals = PoliciesCentral::find(request('ids'));
-
-        foreach ($policiesCentrals as $policiesCentral) {
-            $policiesCentral->delete();
-        }
-
-        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     public function storeCKEditorImages(Request $request)

@@ -22,30 +22,14 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.claimType.fields.claim_gorup_helper') }}</span>
             </div>
-            {{--<div class="form-group">
+            <div class="form-group">
                 <label for="claim_type_code">{{ trans('cruds.claimType.fields.claim_type_code') }}</label>
                 <input class="form-control {{ $errors->has('claim_type_code') ? 'is-invalid' : '' }}" type="text" name="claim_type_code" id="claim_type_code" value="{{ old('claim_type_code', $claimType->claim_type_code) }}">
                 @if($errors->has('claim_type_code'))
                     <span class="text-danger">{{ $errors->first('claim_type_code') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.claimType.fields.claim_type_code_helper') }}</span>
-            </div>--}}
-
-            <div class="form-group">
-                <label for="claim_type_code">{{ trans('cruds.claimType.fields.claim_type_code') }}</label> 
-                <select class="form-control {{ $errors->has('claim_type_code') ? 'is-invalid' : '' }}" name="claim_type_code" id="claim_type_code" required>
-                    <option value disabled {{ old('claim_type_code', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                    @foreach(App\Models\ClaimType::CLAIM_COVERAGE as $key => $label)
-                        <option value="{{ $key }}" {{ old('claim_type_code', $claimType->claim_type_code) === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
-                    @endforeach
-                </select>
-
-                @if($errors->has('claim_type_code'))
-                    <span class="text-danger">{{ $errors->first('claim_type_code') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.claimType.fields.claim_type_code_helper') }}</span>
             </div>
-
             <div class="form-group">
                 <label class="required" for="claim_type_name">{{ trans('cruds.claimType.fields.claim_type_name') }}</label>
                 <input class="form-control {{ $errors->has('claim_type_name') ? 'is-invalid' : '' }}" type="text" name="claim_type_name" id="claim_type_name" value="{{ old('claim_type_name', $claimType->claim_type_name) }}" required>

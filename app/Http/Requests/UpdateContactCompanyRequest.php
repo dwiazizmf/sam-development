@@ -29,6 +29,10 @@ class UpdateContactCompanyRequest extends FormRequest
                 'string',
                 'required',
             ],
+            'website' => [
+                'string',
+                'nullable',
+            ],
             'company_email' => [
                 'string',
                 'nullable',
@@ -46,6 +50,14 @@ class UpdateContactCompanyRequest extends FormRequest
                 'nullable',
             ],
             'company_website' => [
+                'string',
+                'nullable',
+            ],
+            'nama_bank_companies' => [
+                'string',
+                'nullable',
+            ],
+            'no_rekening_companies' => [
                 'string',
                 'nullable',
             ],

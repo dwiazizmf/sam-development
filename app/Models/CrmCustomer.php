@@ -39,19 +39,17 @@ class CrmCustomer extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'company_id',
         'first_name',
         'email',
         'password',
         'role_id',
         'address',
-        'website',
         'commission',
         'nama_pic',
         'no_telp_pic',
         'nama_bank_pic',
         'no_rekening_pic',
-        'nama_bank_companies',
-        'no_rekening_companies',
         'status_id',
         'assigned_to_user_id',
         'prospects_source_id',
@@ -71,6 +69,11 @@ class CrmCustomer extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(ContactCompany::class, 'company_id');
     }
 
     public function role()

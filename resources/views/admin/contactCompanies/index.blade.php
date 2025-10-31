@@ -38,6 +38,9 @@
                         {{ trans('cruds.contactCompany.fields.no_telp') }}
                     </th>
                     <th>
+                        {{ trans('cruds.contactCompany.fields.website') }}
+                    </th>
+                    <th>
                         {{ trans('cruds.contactCompany.fields.company_email') }}
                     </th>
                     <th>
@@ -51,6 +54,12 @@
                     </th>
                     <th>
                         {{ trans('cruds.contactCompany.fields.company_website') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.contactCompany.fields.nama_bank_companies') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.contactCompany.fields.no_rekening_companies') }}
                     </th>
                     <th>
                         &nbsp;
@@ -112,11 +121,14 @@
 { data: 'business_type_name', name: 'business_type.name' },
 { data: 'company_name', name: 'company_name' },
 { data: 'no_telp', name: 'no_telp' },
+{ data: 'website', name: 'website' },
 { data: 'company_email', name: 'company_email' },
 { data: 'company_address', name: 'company_address' },
 { data: 'city', name: 'city' },
 { data: 'province', name: 'province' },
 { data: 'company_website', name: 'company_website' },
+{ data: 'nama_bank_companies', name: 'nama_bank_companies' },
+{ data: 'no_rekening_companies', name: 'no_rekening_companies' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

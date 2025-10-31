@@ -25,6 +25,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.crmCustomer.fields.company') }}
+                        </th>
+                        <td>
+                            {{ $crmCustomer->company->company_name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.crmCustomer.fields.first_name') }}
                         </th>
                         <td>
@@ -65,14 +73,6 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.crmCustomer.fields.website') }}
-                        </th>
-                        <td>
-                            {{ $crmCustomer->website }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.crmCustomer.fields.commission') }}
                         </th>
                         <td>
@@ -109,22 +109,6 @@
                         </th>
                         <td>
                             {{ $crmCustomer->no_rekening_pic }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.crmCustomer.fields.nama_bank_companies') }}
-                        </th>
-                        <td>
-                            {{ $crmCustomer->nama_bank_companies }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.crmCustomer.fields.no_rekening_companies') }}
-                        </th>
-                        <td>
-                            {{ $crmCustomer->no_rekening_companies }}
                         </td>
                     </tr>
                     <tr>
