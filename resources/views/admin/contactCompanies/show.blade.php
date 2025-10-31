@@ -49,6 +49,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.contactCompany.fields.website') }}
+                        </th>
+                        <td>
+                            {{ $contactCompany->website }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.contactCompany.fields.company_email') }}
                         </th>
                         <td>
@@ -85,6 +93,22 @@
                         </th>
                         <td>
                             {{ $contactCompany->company_website }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.contactCompany.fields.nama_bank_companies') }}
+                        </th>
+                        <td>
+                            {{ $contactCompany->nama_bank_companies }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.contactCompany.fields.no_rekening_companies') }}
+                        </th>
+                        <td>
+                            {{ $contactCompany->no_rekening_companies }}
                         </td>
                     </tr>
                 </tbody>

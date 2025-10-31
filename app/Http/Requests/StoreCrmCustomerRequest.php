@@ -17,6 +17,10 @@ class StoreCrmCustomerRequest extends FormRequest
     public function rules()
     {
         return [
+            'company_id' => [
+                'required',
+                'integer',
+            ],
             'first_name' => [
                 'string',
                 'required',
@@ -27,10 +31,6 @@ class StoreCrmCustomerRequest extends FormRequest
                 'unique:crm_customers',
             ],
             'address' => [
-                'string',
-                'nullable',
-            ],
-            'website' => [
                 'string',
                 'nullable',
             ],
@@ -50,14 +50,6 @@ class StoreCrmCustomerRequest extends FormRequest
                 'nullable',
             ],
             'no_rekening_pic' => [
-                'string',
-                'nullable',
-            ],
-            'nama_bank_companies' => [
-                'string',
-                'nullable',
-            ],
-            'no_rekening_companies' => [
                 'string',
                 'nullable',
             ],

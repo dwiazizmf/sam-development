@@ -17,10 +17,10 @@ class StorePolicyTravelRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'id_policies_id' => [
-            //     'required',
-            //     'integer',
-            // ],
+            'id_policies_id' => [
+                'required',
+                'integer',
+            ],
             'polis_name' => [
                 'string',
                 'required',
@@ -48,16 +48,6 @@ class StorePolicyTravelRequest extends FormRequest
             ],
             'upload' => [
                 'array',
-            ],
-            // 'assigned_to_user_id' => [
-            //     'integer',
-            // ],
-            'assigned_to_customer_id' => [
-                'integer',
-            ],
-            'insurance_product_id' => [
-                'required',
-                'integer',
             ],
         ];
     }

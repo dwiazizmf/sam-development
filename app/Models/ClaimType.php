@@ -25,12 +25,6 @@ class ClaimType extends Model
         'claim_type_name',
     ];
 
-    public const CLAIM_COVERAGE = [
-        'pa' => 'PERSONAL ACCIDENT / KECELAKAAN DIRI',
-        'mb' => 'MEDICAL BENEFITS / BIAYA PENGOBATAN DAN PERAWATAN MEDIS',
-        'ti' => 'TRAVEL INCONVENIENCE / KETIDAKNYAMANAN SELAMA PERJALANAN',
-    ];
-
     protected $fillable = [
         'claim_gorup_id',
         'claim_type_code',

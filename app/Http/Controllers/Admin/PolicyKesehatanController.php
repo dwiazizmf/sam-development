@@ -18,10 +18,6 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
-
-use App\Http\Requests\StorePolicyUnifiedRequest;
-use App\Http\Requests\UpdatePolicyUnifiedRequest;
 
 class PolicyKesehatanController extends Controller
 {
@@ -127,130 +123,69 @@ class PolicyKesehatanController extends Controller
     public function create()
     {
         abort_if(Gate::denies('policy_kesehatan_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $isAdmin = auth()->user()->roles->contains(1);
+        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyKesehatans.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin'));
+        return view('admin.policyKesehatans.create', compact('assigned_to_customers', 'assigned_to_users', 'id_policies', 'insurance_products'));
     }
 
-    public function store(StorePolicyUnifiedRequest $request, PolicyKesehatan $policyKesehatan)
+    public function store(StorePolicyKesehatanRequest $request)
     {
-        abort_if(Gate::denies('policy_kesehatan_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
-        try {
-            DB::beginTransaction();
-            // Insert ke tabel central
-            $policiesCentral = PoliciesCentral::create($request->centralData());
+        $policyKesehatan = PolicyKesehatan::create($request->all());
 
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
-            }
-
-            $childData = $request->childData();
-            $childData['id_policies_id'] = $policiesCentral->id;
-            $subPolis = $policyKesehatan->create($childData);
-
-            foreach ($request->input('upload_dokumen', []) as $file) {
-                $subPolis->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $subPolis->id]);
-            }
-
-            DB::commit(); // simpan semua perubahan
-
-            return redirect()->route('admin.policy-kesehatans.index');
-
-        } catch (\Throwable $e) {
-            DB::rollBack(); // batalkan semua kalau error
-
-            return back()->withErrors(['error' => $e->getMessage()]);
+        foreach ($request->input('upload_dokumen', []) as $file) {
+            $policyKesehatan->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
         }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $policyKesehatan->id]);
+        }
+
+        return redirect()->route('admin.policy-kesehatans.index');
     }
 
     public function edit(PolicyKesehatan $policyKesehatan)
     {
         abort_if(Gate::denies('policy_kesehatan_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $assigned_to_users = User::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $isAdmin = auth()->user()->roles->contains(1);
+        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        //$policyKesehatan->load('id_policies', 'insurance_product', 'assigned_to_user', 'assigned_to_customer', 'created_by');
+        $policyKesehatan->load('id_policies', 'insurance_product', 'assigned_to_user', 'assigned_to_customer', 'created_by');
 
-        return view('admin.policyKesehatans.edit', [
-            'policiesCentral' => $policyKesehatan->id_policies,
-            'assigned_to_customers' => $assigned_to_customers,
-            'insurance_products' => $insurance_products,
-            'assigned_to_users' => $assigned_to_users,
-            'policyKesehatan' => $policyKesehatan,
-            'isAdmin' => $isAdmin]);
+        return view('admin.policyKesehatans.edit', compact('assigned_to_customers', 'assigned_to_users', 'id_policies', 'insurance_products', 'policyKesehatan'));
     }
 
-    public function update(UpdatePolicyUnifiedRequest $request, PolicyKesehatan $policyKesehatan)
+    public function update(UpdatePolicyKesehatanRequest $request, PolicyKesehatan $policyKesehatan)
     {
-        abort_if(Gate::denies('policy_kesehatan_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        try {
-            DB::beginTransaction();
+        $policyKesehatan->update($request->all());
 
-            // Insert ke tabel central
-            $policiesCentral = $policyKesehatan->id_policies;
-            $policiesCentral->update($request->centralData());
-                       
-            if (count($policiesCentral->external_polis_doc) > 0) {
-                foreach ($policiesCentral->external_polis_doc as $media) {
-                    if (! in_array($media->file_name, $request->input('external_polis_doc', []))) {
-                        $media->delete();
-                    }
+        if (count($policyKesehatan->upload_dokumen) > 0) {
+            foreach ($policyKesehatan->upload_dokumen as $media) {
+                if (! in_array($media->file_name, $request->input('upload_dokumen', []))) {
+                    $media->delete();
                 }
             }
-            $media = $policiesCentral->external_polis_doc->pluck('file_name')->toArray();
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                if (count($media) === 0 || ! in_array($file, $media)) {
-                    $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-                }
-            }
-
-            // Insert ke child sesuai type
-            $childData = $request->childData();
-            $childData['id_policies_id'] = $policiesCentral->id;
-            $policyKesehatan->update($childData);
-
-            if (count($policyKesehatan->upload_dokumen) > 0) {
-                foreach ($policyKesehatan->upload_dokumen as $media) {
-                    if (! in_array($media->file_name, $request->input('upload_dokumen', []))) {
-                        $media->delete();
-                    }
-                }
-            }
-            $media = $policyKesehatan->upload_dokumen->pluck('file_name')->toArray();
-            foreach ($request->input('upload_dokumen', []) as $file) {
-                if (count($media) === 0 || ! in_array($file, $media)) {
-                    $policyKesehatan->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('admin.policy-kesehatans.index');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error('Gagal menyimpan polis', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
         }
+        $media = $policyKesehatan->upload_dokumen->pluck('file_name')->toArray();
+        foreach ($request->input('upload_dokumen', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $policyKesehatan->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
+            }
+        }
+
+        return redirect()->route('admin.policy-kesehatans.index');
     }
 
     public function show(PolicyKesehatan $policyKesehatan)

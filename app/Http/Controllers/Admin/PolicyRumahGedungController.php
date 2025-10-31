@@ -20,10 +20,6 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
-
-use App\Http\Requests\StorePolicyUnifiedRequest;
-use App\Http\Requests\UpdatePolicyUnifiedRequest;
 
 class PolicyRumahGedungController extends Controller
 {
@@ -142,140 +138,68 @@ class PolicyRumahGedungController extends Controller
     {
         abort_if(Gate::denies('policy_rumah_gedung_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $isAdmin = auth()->user()->roles->contains(1);
 
         $jenis_rumah_gedungs = JenisRumahGedung::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pakets = JenisPaket::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyRumahGedungs.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin', 'jenis_pakets', 'jenis_rumah_gedungs'));
+        return view('admin.policyRumahGedungs.create', compact('id_policies', 'insurance_products', 'jenis_pakets', 'jenis_rumah_gedungs'));
     }
 
-    public function store(StorePolicyUnifiedRequest $request, PolicyRumahGedung $policyRumahGedung)
+    public function store(StorePolicyRumahGedungRequest $request)
     {
-        abort_if(Gate::denies('policy_rumah_gedung_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        try {
-            DB::beginTransaction();
-            // Insert ke tabel central
-            $policiesCentral = PoliciesCentral::create($request->centralData());
+        $policyRumahGedung = PolicyRumahGedung::create($request->all());
 
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
-            }
-
-            $childData = $request->childData();
-            $childData['id_policies_id'] = $policiesCentral->id;
-            $subPolis = $policyRumahGedung->create($childData);
-
-            foreach ($request->input('upload_dokumen', []) as $file) {
-                $subPolis->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $subPolis->id]);
-            }
-
-            DB::commit(); // simpan semua perubahan
-
-            return redirect()->route('admin.policy-rumah-gedungs.index');
-
-        } catch (\Throwable $e) {
-            DB::rollBack(); // batalkan semua kalau error
-
-            return back()->withErrors(['error' => $e->getMessage()]);
+        foreach ($request->input('upload_dokumen', []) as $file) {
+            $policyRumahGedung->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
         }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $policyRumahGedung->id]);
+        }
+
+        return redirect()->route('admin.policy-rumah-gedungs.index');
     }
 
     public function edit(PolicyRumahGedung $policyRumahGedung)
     {
         abort_if(Gate::denies('policy_rumah_gedung_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $isAdmin = auth()->user()->roles->contains(1);
 
         $jenis_rumah_gedungs = JenisRumahGedung::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pakets = JenisPaket::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        //$policyRumahGedung->load('id_policies', 'insurance_product', 'jenis_rumah_gedung', 'jenis_paket', 'assigned_to_user', 'assigned_to_customer', 'created_by');
+        $policyRumahGedung->load('id_policies', 'insurance_product', 'jenis_rumah_gedung', 'jenis_paket', 'assigned_to_user', 'assigned_to_customer', 'created_by');
 
-        return view('admin.policyRumahGedungs.edit', [
-            'policiesCentral' => $policyRumahGedung->id_policies,
-            'assigned_to_customers' => $assigned_to_customers,
-            'insurance_products' => $insurance_products,
-            'assigned_to_users' => $assigned_to_users,
-            'policyRumahGedung' => $policyRumahGedung,
-            'isAdmin' => $isAdmin,
-            'jenis_rumah_gedungs' => $jenis_rumah_gedungs,
-            'jenis_pakets' => $jenis_pakets]);
+        return view('admin.policyRumahGedungs.edit', compact('id_policies', 'insurance_products', 'jenis_pakets', 'jenis_rumah_gedungs', 'policyRumahGedung'));
     }
 
-    public function update(UpdatePolicyUnifiedRequest $request, PolicyRumahGedung $policyRumahGedung)
+    public function update(UpdatePolicyRumahGedungRequest $request, PolicyRumahGedung $policyRumahGedung)
     {
-        abort_if(Gate::denies('policy_rumah_gedung_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        try {
-            DB::beginTransaction();
+        $policyRumahGedung->update($request->all());
 
-            // Insert ke tabel central
-            $policiesCentral = $policyRumahGedung->id_policies;
-            $policiesCentral->update($request->centralData());
-                       
-            if (count($policiesCentral->external_polis_doc) > 0) {
-                foreach ($policiesCentral->external_polis_doc as $media) {
-                    if (! in_array($media->file_name, $request->input('external_polis_doc', []))) {
-                        $media->delete();
-                    }
+        if (count($policyRumahGedung->upload_dokumen) > 0) {
+            foreach ($policyRumahGedung->upload_dokumen as $media) {
+                if (! in_array($media->file_name, $request->input('upload_dokumen', []))) {
+                    $media->delete();
                 }
             }
-            $media = $policiesCentral->external_polis_doc->pluck('file_name')->toArray();
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                if (count($media) === 0 || ! in_array($file, $media)) {
-                    $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-                }
-            }
-
-            // Insert ke child sesuai type
-            $childData = $request->childData();
-            $childData['id_policies_id'] = $policiesCentral->id;
-            $policyRumahGedung->update($childData);
-
-            $policyRumahGedung->update($request->all());
-            if (count($policyRumahGedung->upload_dokumen) > 0) {
-                foreach ($policyRumahGedung->upload_dokumen as $media) {
-                    if (! in_array($media->file_name, $request->input('upload_dokumen', []))) {
-                        $media->delete();
-                    }
-                }
-            }
-            $media = $policyRumahGedung->upload_dokumen->pluck('file_name')->toArray();
-            foreach ($request->input('upload_dokumen', []) as $file) {
-                if (count($media) === 0 || ! in_array($file, $media)) {
-                    $policyRumahGedung->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('admin.policy-rumah-gedungs.index');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error('Gagal menyimpan polis', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
         }
+        $media = $policyRumahGedung->upload_dokumen->pluck('file_name')->toArray();
+        foreach ($request->input('upload_dokumen', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $policyRumahGedung->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_dokumen');
+            }
+        }
+
+        return redirect()->route('admin.policy-rumah-gedungs.index');
     }
 
     public function show(PolicyRumahGedung $policyRumahGedung)

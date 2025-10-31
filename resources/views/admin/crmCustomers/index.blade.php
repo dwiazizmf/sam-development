@@ -29,6 +29,9 @@
                         {{ trans('cruds.crmCustomer.fields.id') }}
                     </th>
                     <th>
+                        {{ trans('cruds.crmCustomer.fields.company') }}
+                    </th>
+                    <th>
                         {{ trans('cruds.crmCustomer.fields.first_name') }}
                     </th>
                     <th>
@@ -39,9 +42,6 @@
                     </th>
                     <th>
                         {{ trans('cruds.crmCustomer.fields.address') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.crmCustomer.fields.website') }}
                     </th>
                     <th>
                         {{ trans('cruds.crmCustomer.fields.commission') }}
@@ -57,12 +57,6 @@
                     </th>
                     <th>
                         {{ trans('cruds.crmCustomer.fields.no_rekening_pic') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.crmCustomer.fields.nama_bank_companies') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.crmCustomer.fields.no_rekening_companies') }}
                     </th>
                     <th>
                         {{ trans('cruds.crmCustomer.fields.dokumen_legalitas') }}
@@ -96,6 +90,14 @@
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
+                        <select class="search">
+                            <option value>{{ trans('global.all') }}</option>
+                            @foreach($contact_companies as $key => $item)
+                                <option value="{{ $item->company_name }}">{{ $item->company_name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
@@ -108,15 +110,6 @@
                                 <option value="{{ $item->title }}">{{ $item->title }}</option>
                             @endforeach
                         </select>
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
-                    </td>
-                    <td>
-                        <input class="search" type="text" placeholder="{{ trans('global.search') }}">
                     </td>
                     <td>
                         <input class="search" type="text" placeholder="{{ trans('global.search') }}">
@@ -231,18 +224,16 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
+{ data: 'company_company_name', name: 'company.company_name' },
 { data: 'first_name', name: 'first_name' },
 { data: 'email', name: 'email' },
 { data: 'role_title', name: 'role.title' },
 { data: 'address', name: 'address' },
-{ data: 'website', name: 'website' },
 { data: 'commission', name: 'commission' },
 { data: 'nama_pic', name: 'nama_pic' },
 { data: 'no_telp_pic', name: 'no_telp_pic' },
 { data: 'nama_bank_pic', name: 'nama_bank_pic' },
 { data: 'no_rekening_pic', name: 'no_rekening_pic' },
-{ data: 'nama_bank_companies', name: 'nama_bank_companies' },
-{ data: 'no_rekening_companies', name: 'no_rekening_companies' },
 { data: 'dokumen_legalitas', name: 'dokumen_legalitas', sortable: false, searchable: false },
 { data: 'status_name', name: 'status.name' },
 { data: 'assigned_to_user_name', name: 'assigned_to_user.name' },

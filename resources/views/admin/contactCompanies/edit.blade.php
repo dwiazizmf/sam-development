@@ -39,6 +39,14 @@
                 <span class="help-block">{{ trans('cruds.contactCompany.fields.no_telp_helper') }}</span>
             </div>
             <div class="form-group">
+                <label for="website">{{ trans('cruds.contactCompany.fields.website') }}</label>
+                <input class="form-control {{ $errors->has('website') ? 'is-invalid' : '' }}" type="text" name="website" id="website" value="{{ old('website', $contactCompany->website) }}">
+                @if($errors->has('website'))
+                    <span class="text-danger">{{ $errors->first('website') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.contactCompany.fields.website_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label for="company_email">{{ trans('cruds.contactCompany.fields.company_email') }}</label>
                 <input class="form-control {{ $errors->has('company_email') ? 'is-invalid' : '' }}" type="text" name="company_email" id="company_email" value="{{ old('company_email', $contactCompany->company_email) }}">
                 @if($errors->has('company_email'))
@@ -77,6 +85,22 @@
                     <span class="text-danger">{{ $errors->first('company_website') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.contactCompany.fields.company_website_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="nama_bank_companies">{{ trans('cruds.contactCompany.fields.nama_bank_companies') }}</label>
+                <input class="form-control {{ $errors->has('nama_bank_companies') ? 'is-invalid' : '' }}" type="text" name="nama_bank_companies" id="nama_bank_companies" value="{{ old('nama_bank_companies', $contactCompany->nama_bank_companies) }}">
+                @if($errors->has('nama_bank_companies'))
+                    <span class="text-danger">{{ $errors->first('nama_bank_companies') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.contactCompany.fields.nama_bank_companies_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="no_rekening_companies">{{ trans('cruds.contactCompany.fields.no_rekening_companies') }}</label>
+                <input class="form-control {{ $errors->has('no_rekening_companies') ? 'is-invalid' : '' }}" type="text" name="no_rekening_companies" id="no_rekening_companies" value="{{ old('no_rekening_companies', $contactCompany->no_rekening_companies) }}">
+                @if($errors->has('no_rekening_companies'))
+                    <span class="text-danger">{{ $errors->first('no_rekening_companies') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.contactCompany.fields.no_rekening_companies_helper') }}</span>
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

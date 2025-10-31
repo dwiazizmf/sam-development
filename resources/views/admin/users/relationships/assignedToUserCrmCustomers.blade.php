@@ -25,6 +25,9 @@
                                 {{ trans('cruds.crmCustomer.fields.id') }}
                             </th>
                             <th>
+                                {{ trans('cruds.crmCustomer.fields.company') }}
+                            </th>
+                            <th>
                                 {{ trans('cruds.crmCustomer.fields.first_name') }}
                             </th>
                             <th>
@@ -35,9 +38,6 @@
                             </th>
                             <th>
                                 {{ trans('cruds.crmCustomer.fields.address') }}
-                            </th>
-                            <th>
-                                {{ trans('cruds.crmCustomer.fields.website') }}
                             </th>
                             <th>
                                 {{ trans('cruds.crmCustomer.fields.commission') }}
@@ -53,12 +53,6 @@
                             </th>
                             <th>
                                 {{ trans('cruds.crmCustomer.fields.no_rekening_pic') }}
-                            </th>
-                            <th>
-                                {{ trans('cruds.crmCustomer.fields.nama_bank_companies') }}
-                            </th>
-                            <th>
-                                {{ trans('cruds.crmCustomer.fields.no_rekening_companies') }}
                             </th>
                             <th>
                                 {{ trans('cruds.crmCustomer.fields.dokumen_legalitas') }}
@@ -96,6 +90,9 @@
                                     {{ $crmCustomer->id ?? '' }}
                                 </td>
                                 <td>
+                                    {{ $crmCustomer->company->company_name ?? '' }}
+                                </td>
+                                <td>
                                     {{ $crmCustomer->first_name ?? '' }}
                                 </td>
                                 <td>
@@ -106,9 +103,6 @@
                                 </td>
                                 <td>
                                     {{ $crmCustomer->address ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $crmCustomer->website ?? '' }}
                                 </td>
                                 <td>
                                     {{ $crmCustomer->commission ?? '' }}
@@ -124,12 +118,6 @@
                                 </td>
                                 <td>
                                     {{ $crmCustomer->no_rekening_pic ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $crmCustomer->nama_bank_companies ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $crmCustomer->no_rekening_companies ?? '' }}
                                 </td>
                                 <td>
                                     @foreach($crmCustomer->dokumen_legalitas as $key => $media)

@@ -18,6 +18,7 @@ class UpdatePolicyPaRequest extends FormRequest
     {
         return [
             'id_policies_id' => [
+                'required',
                 'integer',
             ],
             'nama_tertanggung' => [
@@ -31,7 +32,6 @@ class UpdatePolicyPaRequest extends FormRequest
             'alamat_tertanggung' => [
                 'string',
                 'nullable',
-                'max:255',
             ],
             'phone' => [
                 'string',
@@ -43,20 +43,6 @@ class UpdatePolicyPaRequest extends FormRequest
             ],
             'upload_dokumen' => [
                 'array',
-            ],
-            // 'assigned_to_user_id' => [
-            //     'integer',
-            // ],
-             'assigned_to_customer_id' => [
-                'integer',
-            ],
-            'email' => [
-                'string',
-                'nullable',
-            ],
-            'insurance_product_id' => [
-                'required',
-                'integer',
             ],
         ];
     }

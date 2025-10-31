@@ -8,6 +8,7 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyCrmCustomerRequest;
 use App\Http\Requests\StoreCrmCustomerRequest;
 use App\Http\Requests\UpdateCrmCustomerRequest;
+use App\Models\ContactCompany;
 use App\Models\ContactContact;
 use App\Models\CrmCustomer;
 use App\Models\CrmStatus;
@@ -28,7 +29,7 @@ class CrmCustomerController extends Controller
         abort_if(Gate::denies('crm_customer_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = CrmCustomer::with(['role', 'status', 'assigned_to_user', 'prospects_source', 'created_by'])->select(sprintf('%s.*', (new CrmCustomer)->table));
+            $query = CrmCustomer::with(['company', 'role', 'status', 'assigned_to_user', 'prospects_source', 'created_by'])->select(sprintf('%s.*', (new CrmCustomer)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -52,6 +53,10 @@ class CrmCustomerController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
+            $table->addColumn('company_company_name', function ($row) {
+                return $row->company ? $row->company->company_name : '';
+            });
+
             $table->editColumn('first_name', function ($row) {
                 return $row->first_name ? $row->first_name : '';
             });
@@ -64,9 +69,6 @@ class CrmCustomerController extends Controller
 
             $table->editColumn('address', function ($row) {
                 return $row->address ? $row->address : '';
-            });
-            $table->editColumn('website', function ($row) {
-                return $row->website ? $row->website : '';
             });
             $table->editColumn('commission', function ($row) {
                 return $row->commission ? $row->commission : '';
@@ -82,12 +84,6 @@ class CrmCustomerController extends Controller
             });
             $table->editColumn('no_rekening_pic', function ($row) {
                 return $row->no_rekening_pic ? $row->no_rekening_pic : '';
-            });
-            $table->editColumn('nama_bank_companies', function ($row) {
-                return $row->nama_bank_companies ? $row->nama_bank_companies : '';
-            });
-            $table->editColumn('no_rekening_companies', function ($row) {
-                return $row->no_rekening_companies ? $row->no_rekening_companies : '';
             });
             $table->editColumn('dokumen_legalitas', function ($row) {
                 if (! $row->dokumen_legalitas) {
@@ -120,22 +116,25 @@ class CrmCustomerController extends Controller
                 return $row->created_by ? $row->created_by->name : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'role', 'dokumen_legalitas', 'status', 'assigned_to_user', 'prospects_source', 'created_by']);
+            $table->rawColumns(['actions', 'placeholder', 'company', 'role', 'dokumen_legalitas', 'status', 'assigned_to_user', 'prospects_source', 'created_by']);
 
             return $table->make(true);
         }
 
-        $roles            = Role::get();
-        $crm_statuses     = CrmStatus::get();
-        $users            = User::get();
-        $contact_contacts = ContactContact::get();
+        $contact_companies = ContactCompany::get();
+        $roles             = Role::get();
+        $crm_statuses      = CrmStatus::get();
+        $users             = User::get();
+        $contact_contacts  = ContactContact::get();
 
-        return view('admin.crmCustomers.index', compact('roles', 'crm_statuses', 'users', 'contact_contacts'));
+        return view('admin.crmCustomers.index', compact('contact_companies', 'roles', 'crm_statuses', 'users', 'contact_contacts'));
     }
 
     public function create()
     {
         abort_if(Gate::denies('crm_customer_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $companies = ContactCompany::pluck('company_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $roles = Role::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -145,7 +144,7 @@ class CrmCustomerController extends Controller
 
         $prospects_sources = ContactContact::pluck('contact_first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.crmCustomers.create', compact('assigned_to_users', 'prospects_sources', 'roles', 'statuses'));
+        return view('admin.crmCustomers.create', compact('assigned_to_users', 'companies', 'prospects_sources', 'roles', 'statuses'));
     }
 
     public function store(StoreCrmCustomerRequest $request)
@@ -167,6 +166,8 @@ class CrmCustomerController extends Controller
     {
         abort_if(Gate::denies('crm_customer_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        $companies = ContactCompany::pluck('company_name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
         $roles = Role::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $statuses = CrmStatus::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -175,9 +176,9 @@ class CrmCustomerController extends Controller
 
         $prospects_sources = ContactContact::pluck('contact_first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $crmCustomer->load('role', 'status', 'assigned_to_user', 'prospects_source', 'created_by');
+        $crmCustomer->load('company', 'role', 'status', 'assigned_to_user', 'prospects_source', 'created_by');
 
-        return view('admin.crmCustomers.edit', compact('assigned_to_users', 'crmCustomer', 'prospects_sources', 'roles', 'statuses'));
+        return view('admin.crmCustomers.edit', compact('assigned_to_users', 'companies', 'crmCustomer', 'prospects_sources', 'roles', 'statuses'));
     }
 
     public function update(UpdateCrmCustomerRequest $request, CrmCustomer $crmCustomer)
@@ -205,7 +206,7 @@ class CrmCustomerController extends Controller
     {
         abort_if(Gate::denies('crm_customer_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $crmCustomer->load('role', 'status', 'assigned_to_user', 'prospects_source', 'created_by');
+        $crmCustomer->load('company', 'role', 'status', 'assigned_to_user', 'prospects_source', 'created_by');
 
         return view('admin.crmCustomers.show', compact('crmCustomer'));
     }

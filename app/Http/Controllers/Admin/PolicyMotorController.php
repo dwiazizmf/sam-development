@@ -9,7 +9,6 @@ use App\Http\Requests\MassDestroyPolicyMotorRequest;
 use App\Http\Requests\StorePolicyMotorRequest;
 use App\Http\Requests\UpdatePolicyMotorRequest;
 use App\Models\CrmCustomer;
-use App\Models\InsuranceProduct;
 use App\Models\JenisPertanggungan;
 use App\Models\PerluasanPertanggungan;
 use App\Models\PoliciesCentral;
@@ -20,10 +19,6 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\DB;
-
-use App\Http\Requests\StorePolicyUnifiedRequest;
-use App\Http\Requests\UpdatePolicyUnifiedRequest;
 
 class PolicyMotorController extends Controller
 {
@@ -145,141 +140,64 @@ class PolicyMotorController extends Controller
     {
         abort_if(Gate::denies('policy_motor_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $isAdmin = auth()->user()->roles->contains(1);
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pertanggungans = JenisPertanggungan::pluck('jenis_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $perluasan_pertanggungans = PerluasanPertanggungan::pluck('pertanggungan_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.policyMotors.create', compact('assigned_to_customers', 'assigned_to_users', 'insurance_products', 'isAdmin', 'jenis_pertanggungans', 'perluasan_pertanggungans'));
+        return view('admin.policyMotors.create', compact('id_policies', 'jenis_pertanggungans', 'perluasan_pertanggungans'));
     }
 
-    public function store(StorePolicyUnifiedRequest $request, PolicyMotor $policyMotor)
+    public function store(StorePolicyMotorRequest $request)
     {
-        abort_if(Gate::denies('policy_motor_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $policyMotor = PolicyMotor::create($request->all());
 
-        try {
-            DB::beginTransaction();
-
-            // Insert ke tabel central
-            $policiesCentral = PoliciesCentral::create($request->centralData());
-
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $policiesCentral->id]);
-            }
-
-            $childData = $request->childData();
-            $childData['id_policies_id'] = $policiesCentral->id;
-            $subPolis = $policyMotor->create($childData);
-
-            foreach ($request->input('upload_kendaraan', []) as $file) {
-                $subPolis->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
-            }
-
-            if ($media = $request->input('ck-media', false)) {
-                Media::whereIn('id', $media)->update(['model_id' => $subPolis->id]);
-            }
-
-            DB::commit(); // simpan semua perubahan
-
-            return redirect()->route('admin.policy-motors.index');
-
-        } catch (\Throwable $e) {
-            DB::rollBack(); // batalkan semua kalau error
-
-            return back()->withErrors(['error' => $e->getMessage()]);
+        foreach ($request->input('upload_kendaraan', []) as $file) {
+            $policyMotor->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
         }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $policyMotor->id]);
+        }
+
+        return redirect()->route('admin.policy-motors.index');
     }
 
     public function edit(PolicyMotor $policyMotor)
     {
         abort_if(Gate::denies('policy_motor_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $assigned_to_customers = CrmCustomer::pluck('first_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $insurance_products = InsuranceProduct::pluck('product_name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $assigned_to_users = User::where('id', '!=', 1)->pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $isAdmin = auth()->user()->roles->contains(1);
+        $id_policies = PoliciesCentral::pluck('policy_number', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $jenis_pertanggungans = JenisPertanggungan::pluck('jenis_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $perluasan_pertanggungans = PerluasanPertanggungan::pluck('pertanggungan_name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        //$policyMotor->load('id_policies', 'jenis_pertanggungan', 'perluasan_pertanggungan', 'assigned_to_user', 'assigned_to_customer', 'created_by');
+        $policyMotor->load('id_policies', 'jenis_pertanggungan', 'perluasan_pertanggungan', 'assigned_to_user', 'assigned_to_customer', 'created_by');
 
-        return view('admin.policyMotors.edit', [
-            'policiesCentral' => $policyMotor->id_policies,
-            'assigned_to_customers' => $assigned_to_customers,
-            'insurance_products' => $insurance_products,
-            'assigned_to_users' => $assigned_to_users,
-            'jenis_pertanggungans' => $jenis_pertanggungans, 
-            'perluasan_pertanggungans' => $perluasan_pertanggungans, 
-            'policyMotor' => $policyMotor,
-            'isAdmin' => $isAdmin]);
+        return view('admin.policyMotors.edit', compact('id_policies', 'jenis_pertanggungans', 'perluasan_pertanggungans', 'policyMotor'));
     }
 
-    public function update(UpdatePolicyUnifiedRequest $request, PolicyMotor $policyMotor)
+    public function update(UpdatePolicyMotorRequest $request, PolicyMotor $policyMotor)
     {
-        abort_if(Gate::denies('policy_motor_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        try {
-            DB::beginTransaction();
+        $policyMotor->update($request->all());
 
-            // Insert ke tabel central
-            $policiesCentral = $policyMotor->id_policies;
-            $policiesCentral->update($request->centralData());
-                       
-            if (count($policiesCentral->external_polis_doc) > 0) {
-                foreach ($policiesCentral->external_polis_doc as $media) {
-                    if (! in_array($media->file_name, $request->input('external_polis_doc', []))) {
-                        $media->delete();
-                    }
+        if (count($policyMotor->upload_kendaraan) > 0) {
+            foreach ($policyMotor->upload_kendaraan as $media) {
+                if (! in_array($media->file_name, $request->input('upload_kendaraan', []))) {
+                    $media->delete();
                 }
             }
-            $media = $policiesCentral->external_polis_doc->pluck('file_name')->toArray();
-            foreach ($request->input('external_polis_doc', []) as $file) {
-                if (count($media) === 0 || ! in_array($file, $media)) {
-                    $policiesCentral->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('external_polis_doc');
-                }
-            }
-
-            // Insert ke child sesuai type
-            $childData = $request->childData();
-            $childData['id_policies_id'] = $policiesCentral->id;
-            $policyMotor->update($childData);
-
-            if (count($policyMotor->upload_kendaraan) > 0) {
-                foreach ($policyMotor->upload_kendaraan as $media) {
-                    if (! in_array($media->file_name, $request->input('upload_kendaraan', []))) {
-                        $media->delete();
-                    }
-                }
-            }
-            $media = $policyMotor->upload_kendaraan->pluck('file_name')->toArray();
-            foreach ($request->input('upload_kendaraan', []) as $file) {
-                if (count($media) === 0 || ! in_array($file, $media)) {
-                    $policyMotor->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
-                }
-            }
-
-            DB::commit();
-            return redirect()->route('admin.policy-motors.index');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            \Log::error('Gagal menyimpan polis', ['error' => $e->getMessage()]);
-            return back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();
         }
+        $media = $policyMotor->upload_kendaraan->pluck('file_name')->toArray();
+        foreach ($request->input('upload_kendaraan', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $policyMotor->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('upload_kendaraan');
+            }
+        }
+
+        return redirect()->route('admin.policy-motors.index');
     }
 
     public function show(PolicyMotor $policyMotor)

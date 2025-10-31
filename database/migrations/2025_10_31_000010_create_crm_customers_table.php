@@ -14,14 +14,11 @@ class CreateCrmCustomersTable extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('password')->nullable();
             $table->string('address')->nullable();
-            $table->string('website')->nullable();
             $table->float('commission', 15, 2)->nullable();
             $table->string('nama_pic')->nullable();
             $table->string('no_telp_pic')->nullable();
             $table->string('nama_bank_pic')->nullable();
             $table->string('no_rekening_pic')->nullable();
-            $table->string('nama_bank_companies')->nullable();
-            $table->string('no_rekening_companies')->nullable();
             $table->datetime('converted_date')->nullable();
             $table->timestamps();
             $table->softDeletes();

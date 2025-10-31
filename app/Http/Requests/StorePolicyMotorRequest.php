@@ -18,15 +18,8 @@ class StorePolicyMotorRequest extends FormRequest
     {
         return [
             'id_policies_id' => [
+                'required',
                 'integer',
-            ],
-            'jenis_pertanggungan_id' => [
-                'required',
-                'nullable',
-            ],
-            'perluasan_pertanggungan_id' => [
-                'required',
-                'nullable',
             ],
             'merk_type' => [
                 'string',
@@ -58,20 +51,6 @@ class StorePolicyMotorRequest extends FormRequest
                 'string',
                 'nullable',
             ],
-            'alamat_tertanggung' => [
-                'string',
-                'nullable',
-            ],
-            'email' => [
-                'nullable', 
-                'string', 
-                'email', 
-                'max:255'
-            ],
-            'nilai_pertanggungan' => [
-                'integer',
-                'nullable',
-            ],
             'no_hp' => [
                 'string',
                 'nullable',
@@ -82,35 +61,6 @@ class StorePolicyMotorRequest extends FormRequest
             ],
             'upload_kendaraan' => [
                 'array',
-            ],
-            'alamat_tertanggung' => [
-                'string',
-                'nullable',
-                'max:255',
-            ],
-            'email' => [
-                'nullable', 
-                'string', 
-                'email', 
-                'max:255'
-            ],
-            'nilai_pertanggungan' => [
-                'integer',
-                'nullable',
-            ],
-            'jenis_pertanggungan_id' => [
-                'required',
-                'nullable',
-            ],
-            'perluasan_pertanggungan_id' => [
-                'required',
-                'nullable',
-            ],
-            // 'assigned_to_user_id' => [
-            //     'integer',
-            // ],
-             'assigned_to_customer_id' => [
-                'integer',
             ],
         ];
     }
